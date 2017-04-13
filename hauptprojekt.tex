@@ -1,0 +1,184 @@
+% !TeX root = hauptprojekt.tex
+% !TeX spellcheck = en_US
+
+\documentclass[
+,paper=a4
+,twoside=false
+,fontsize=11pt
+,headsepline
+,BCOR10mm
+,DIV11
+]{scrbook}
+\usepackage[english, ngerman]{babel}
+%% see http://www.tex.ac.uk/cgi-bin/texfaq2html?label=uselmfonts
+
+% define \mysharp using the arev package
+\usepackage{arev}
+\newsavebox{\sharpbox}
+\sbox{\sharpbox}{$\sharp$}
+\newcommand{\mysharp}{\usebox{\sharpbox}}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{libertine}
+\usepackage{pifont}
+\usepackage{microtype}
+\usepackage{textcomp}
+\usepackage[german,refpage]{nomencl}
+\usepackage{setspace}
+\usepackage{makeidx}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage[english,colorlinks=true]{hyperref}
+\usepackage{soul}
+\usepackage{hawstyle}
+\usepackage{float}
+\usepackage{csquotes}
+\usepackage{tabularx}
+\usepackage{subcaption}
+
+
+%% define some colors
+\colorlet{BackgroundColor}{gray!20}
+\colorlet{KeywordColor}{blue}
+\colorlet{CommentColor}{black!60}
+%% for tables
+\colorlet{HeadColor}{gray!60}
+\colorlet{Color1}{blue!10}
+\colorlet{Color2}{white}
+
+%% configure colors
+\HAWifprinter{
+	\colorlet{BackgroundColor}{gray!20}
+	\colorlet{KeywordColor}{black}
+	\colorlet{CommentColor}{gray}
+	% for tables
+	\colorlet{HeadColor}{gray!60}
+	\colorlet{Color1}{gray!40}
+	\colorlet{Color2}{white}
+}{}
+\lstset{%
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=5pt,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{KeywordColor}\bfseries,
+	identifierstyle=\color{black},
+	commentstyle=\color{CommentColor},
+	backgroundcolor=\color{BackgroundColor},
+	captionpos=b,
+	fontadjust=true
+}
+\lstset{escapeinside={(*@}{@*)}, % used to enter latex code inside listings
+	morekeywords={uint32_t, int32_t}
+}
+\ifpdfoutput{
+	\hypersetup{bookmarksopen=false,bookmarksnumbered,linktocpage}
+}{}
+
+%% more fancy C++
+\DeclareRobustCommand{\cxx}{C\raisebox{0.25ex}{{\scriptsize +\kern-0.25ex +}}}
+
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+% unknown hyphenations
+\hyphenation{
+}
+
+%% recalculate text area
+\typearea[current]{last}
+
+\makeindex
+\makenomenclature
+
+\begin{document}
+	\selectlanguage{english}
+	
+	
+	%%%%%
+	%% customize (see readme.pdf for supported values)
+	\HAWThesisProperties{Author={Lennart Karsten}
+		,Title={Informationsgewinnung aus verschiedenen, überlappenden Datensätze}
+		,EnglishTitle={Agregation of data from various data sources}
+		,ThesisType={Hauptprojekt}
+		,ExaminationType={Masterprüfung}
+		,DegreeProgramme={Master Informatik}
+		,ThesisExperts={Prof. Dr. Clemen}
+		,ReleaseDate={\today}
+	}
+
+	%% title
+	\frontmatter
+	
+	%% output title page
+	\maketitle
+	
+	\onehalfspacing
+	
+	%% add abstract pages
+	%% note: this is one command on multiple lines
+	\HAWAbstractPage
+	%% German abstract
+	{GIS}%
+	{Diese Arbeit behandelt die Informationsgewinnung aus verschiedenen, überlappenden Datensätze.}
+	%% English abstract
+	{GIS}%
+	{This work covers the agregation of data from various data sources.}
+	
+	\newpage
+	\singlespacing
+	
+	\tableofcontents
+	\newpage
+	%% enable if these lists should be shown on their own page
+	%%\listoftables
+	%%\listoffigures
+	%\lstlistoflistings
+	
+	%% main
+	\mainmatter
+	\onehalfspacing
+	%% write to the log/stdout
+	\typeout{===== File: chapter 1}
+
+
+	\input{chapters/chapter1} % Introduction
+%	\input{chapters/chapter2} % Groundwork
+%	\input{chapters/chapter3} % Analysis
+%	\input{chapters/chapter4} % Software Design
+%	\input{chapters/chapter5} % Implementation
+%	\input{chapters/chapter6} % End
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% appendix if used
+	%%\appendix
+	%%\typeout{===== File: appendix}
+	%%\include{appendix}
+	
+	% bibliography and other stuff
+	\backmatter
+	
+	\typeout{===== Section: literature}
+	%% read the documentation for customizing the style
+	\bibliographystyle{dinat}
+	\bibliography{hauptprojekt}
+	
+	\typeout{===== Section: nomenclature}
+	%% uncomment if a TOC entry is needed
+	%%\addcontentsline{toc}{chapter}{Glossar}
+	\renewcommand{\nomname}{Glossar}
+	\clearpage
+	\markboth{\nomname}{\nomname} %% see nomencl doc, page 9, section 4.1
+	\printnomenclature
+	
+	%% index
+	\typeout{===== Section: index}
+	\printindex
+	
+	%\HAWasurency
+	
+\end{document}
