@@ -37,6 +37,53 @@
 \usepackage{tabularx}
 \usepackage{subcaption}
 
+% Initializing the functional requirements
+\newcommand{\reqinitF}{
+	% Create a new counter for keeping track of the last number
+	\newcounter{reqcountbackupF}
+	% Create a new counter for the custom label
+	\newcounter{reqcountF}
+	% Redefine the command for the last counter so when it is called
+	% it prints the number like this in a bold font: R<number>
+	\renewcommand{\thereqcountF}{\textbf{F\arabic{reqcountF}}}
+}
+
+% Used to define the start of the requirements
+\newcommand{\reqstartF}{
+	% Indicate the start of a new list and tell it to use the redefined
+	% command and corresponding counter for every item
+	\begin{list}{\thereqcountF}{\usecounter{reqcountF}}
+		% Important part: set the value of the used counter to the
+		% same value of the backup counter.
+		\setcounter{reqcountF}{\value{reqcountbackupF}}
+	}
+	
+	% Used to define the end of the requirements
+	\newcommand{\reqendF}{
+		% Important part: take the value of the used counter (after
+		% being incremented by the requirement items) and store it
+		% in the backup counter.
+		\setcounter{reqcountbackupF}{\value{reqcountF}}
+		% Mark the end of the list environment
+	\end{list}
+}
+
+% Initializing the non-functional requirements
+\newcommand{\reqinitNF}{
+	\newcounter{reqcountbackupNF}
+	\newcounter{reqcountNF}
+	\renewcommand{\thereqcountNF}{\textbf{NF\arabic{reqcountNF}}}
+}
+
+\newcommand{\reqstartNF}{
+	\begin{list}{\thereqcountNF}{\usecounter{reqcountNF}}
+		\setcounter{reqcountNF}{\value{reqcountbackupNF}}
+	}
+	
+	\newcommand{\reqendNF}{
+		\setcounter{reqcountbackupNF}{\value{reqcountNF}}
+	\end{list}
+}
 
 %% define some colors
 \colorlet{BackgroundColor}{gray!20}
@@ -101,8 +148,8 @@
 	%%%%%
 	%% customize (see readme.pdf for supported values)
 	\HAWThesisProperties{Author={Lennart Karsten}
-		,Title={Informationsgewinnung aus verschiedenen, überlappenden Datensätze}
-		,EnglishTitle={Agregation of data from various data sources}
+		,Title={Optimierung der GIS Lesegeschwindigkeit in einem Multi-Agenten Simulationssystem}
+		,EnglishTitle={Optimizing GIS read performance inside a multi-agent simulation system}
 		,ThesisType={Hauptprojekt}
 		,ExaminationType={Masterprüfung}
 		,DegreeProgramme={Master Informatik}
@@ -114,50 +161,52 @@
 	\frontmatter
 	
 	%% output title page
-%	\maketitle
+	\maketitle
 	
 	\onehalfspacing
 	
 	%% add abstract pages
 	%% note: this is one command on multiple lines
-%	\HAWAbstractPage
-%	%% German abstract
-%	{GIS}%
-%	{Diese Arbeit behandelt die Informationsgewinnung aus verschiedenen, überlappenden Datensätze.}
-%	%% English abstract
-%	{GIS}%
-%	{This work covers the agregation of data from various data sources.}
+	\HAWAbstractPage
+	%% German abstract
+	{GIS}%
+	{Deutscher Abstract.}
+	%% English abstract
+	{GIS}%
+	{english abstract.}
 	
 	\newpage
 	\singlespacing
 	
-%	\tableofcontents
+	\tableofcontents
 	\newpage
 	%% enable if these lists should be shown on their own page
-	%%\listoftables
-	%%\listoffigures
+	%\listoftables
+	%\listoffigures
 	%\lstlistoflistings
 	
 	%% main
 	\mainmatter
 	\onehalfspacing
-	%% write to the log/stdout
+	% write to the log/stdout
 	\typeout{===== File: chapter 1}
 
+	% init requirements	
+	\reqinitF
+	\reqinitNF
 
 	\input{chapters/chapter1} % Introduction
-%	\input{chapters/chapter2} % Groundwork
-%	\input{chapters/chapter3} % Analysis
-%	\input{chapters/chapter4} % Software Design
-%	\input{chapters/chapter5} % Implementation
-%	\input{chapters/chapter6} % End
+	\input{chapters/chapter2} % Groundwork
+	\input{chapters/chapter3} % Analysis
+	\input{chapters/chapter4} % Software Design
+	\input{chapters/chapter5} % End
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% appendix if used
 	%%\appendix
-	%%\typeout{===== File: appendix}
-	%%\include{appendix}
+	%\typeout{===== File: appendix}
+	%\include{appendix}
 	
 	% bibliography and other stuff
 	\backmatter
