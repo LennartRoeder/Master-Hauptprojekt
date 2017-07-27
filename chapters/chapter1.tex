@@ -1,4 +1,12 @@
 % !TeX spellcheck = en_US
 
 \chapter{Introduction}
-To function, the MARS LIFE simulation system relies on input data that influences the simulation runs. Due to to environmental domain, the use of so called GIS data is essential. The current implementation for GIS is not usable from a performance standpoint. This work analyses the current state and itroduces architectual changes to solve this problem of slow GIS reads.
+MARS LIFE provides a large scale simulation environment for multi-agent simulations. Due to the environmental centered domain, the use of Geographic Information System (GIS) data is essential.\\
+The current implementation for GIS usage inside LIFE is not working since the migration from Mono to .NET Core and while this might change, it has significant performance hazards.
+
+
+
+\section{Motivation}
+The biggest project using MARS is an ecological model of the Krueger National Park (KNP) that tracks elephant and marula tree populations. 
+
+This work analyses the current state and introduces architectural changes to solve this problem of slow GIS reads.
