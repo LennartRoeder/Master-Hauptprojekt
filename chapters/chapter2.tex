@@ -1,7 +1,7 @@
 % !TeX spellcheck = en_US
 
 \chapter{Related Work}
-This section elaborates the base technologies necessary to understand the following chapters.
+This chapter elaborates on the base technologies necessary to understand the following chapters.
 
 
 \section{Geographic Information System (GIS)}
@@ -9,8 +9,13 @@ GIS contains of numerous technologies to store, manipulate and analyze geographi
 
 
 \subsection{Coordinate Reference System (CRS)}
-In comparison to normal image data, GIS data is always geo-referenced. This is achieved by specific geo-aware formats that encode the position on the earth into the file and requires specialized software.\\
-When displaying GIS, it is almost always necessary to project the round shape of earth onto a plane. This projection is called \enquote{spatial reference system} (SRS) or  \enquote{coordinate reference system} CRS. Depending on the area of the earth, different projections result in optimal results.\\
+In comparison to normal image data, GIS data is always geo-referenced. This is achieved by specific geo-aware formats that encode the spatial position into the file. Reading and writing GIS requires specialized software.\\
+When displaying GIS, it is almost always necessary to project the round shape of earth onto a plane. This projection can be done in numerous ways called \enquote{spatial reference system} (SRS) or  \enquote{coordinate reference system} CRS. Depending on the area of earth, different projections result in optimal results (see figure \ref{fig:mercator}).
+\begin{figure}[H]
+	\centering\includegraphics[width=1\textwidth]{res/Mercator}
+	\caption{Normal and transverse Mercator projection by Peter Mercator. \url{https://commons.wikimedia.org/w/index.php?curid=9910866}}
+	\label{fig:mercator}
+\end{figure}
 For viewing the whole world, the \enquote{World Geodetic System 1984} (WGS 84) is the most common CRS. It also exists as an \enquote{European Petroleum Survey Group}  (EPSG) standard. EPSG:4326 is the most recent version of this projection. It is used by the Global Positioning System (GPS), as well as map applications like OpenStreetMap (OSM) and Google Maps.
 
 
