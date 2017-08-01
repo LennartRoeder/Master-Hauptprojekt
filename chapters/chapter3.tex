@@ -1,11 +1,54 @@
 % !TeX spellcheck = en_US
 
 \chapter{Analysis}
+The goal of this work is to create a layer inside the simulation system MARS LIFE that allows loading GIS in an high-performance way. To ensure the practical use to the model developers use-cases were taken into account to generate requirements for the implementation.
 
 
 
 \section{Use-Cases}
+\begin{usecase}
+	\addtitle{Vector I}{Read all features}
+	\addfield{Summary:}{Read features from vector files with the following types: 
+		\begin{itemize}[itemsep=-.25em]
+			\item Point
+			\item Polyline
+			\item Polygon
+		\end{itemize}
+	}
+	\additemizedfield{Preconditions:}{
+		\item The vector file was imported prior to the simulation run.
+	}
+	\additemizedfield{Primary Scenario:}{
+		\item A layer wants to read the position of agents during the initialization.
+	}
+%	\additemizedfield{Alternative Scenario:}{
+%		\item The user clicks the upload button, browses files of his local machine, fills the form for every file and starts the import.
+%	}
+\end{usecase}
 
+\begin{usecase}
+	\addtitle{Vector II}{Read feature at position}
+	\addfield{Summary:}{Read the closest feature to a GPS position.
+	}
+	\additemizedfield{Preconditions:}{
+		\item The vector file was imported prior to the simulation run.
+	}
+	\additemizedfield{Primary Scenario:}{
+		\item An agent wants to find a point of interest in his area (e.g. An elephant looking for the closest waterhole).
+	}
+\end{usecase}
+
+\begin{usecase}
+	\addtitle{Vector III}{Calculate distance between features}
+	\addfield{Summary:}{A function that takes two features of different types as input and returns the distance in meters.
+	}
+	\additemizedfield{Preconditions:}{
+		\item Both features exist and are available to the layer.
+	}
+	\additemizedfield{Primary Scenario:}{
+		\item An agent wants to know the distance to a specific pint of interest.
+	}
+\end{usecase}
 
 \section{Requirements}
 
