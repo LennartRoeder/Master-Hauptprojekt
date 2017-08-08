@@ -17,7 +17,7 @@ When storing GIS, it is necessary to translate the data into coordinate system. 
 The most globally used CRS is the Mercator projection. I was created by Gerardus Mercator in 1569 and has been improved over the years. Figure \ref{fig:mercator} shows the Mercator projection in it's normal and transverse orientation. The normal projection offers good general representation, while the transverse orientation is focuses on the poles.
 \begin{figure}[H]
 	\centering\includegraphics[width=1\textwidth]{res/Mercator}
-	\caption{Normal and transverse Mercator projection by Peter Mercator. \url{https://commons.wikimedia.org/w/index.php?curid=9910866}}
+	\caption{Normal and transverse Mercator projection. \url{https://commons.wikimedia.org/w/index.php?curid=9910866}}
 	\label{fig:mercator}
 \end{figure}
 
@@ -33,27 +33,33 @@ The pyramid is created, by cutting images of fixed size, usually 256px in width 
 The resulting small images are ideally to be loaded on demand by a web browser. This is, why all major map sites, like OSM, Google Maps and Bing Maps use Pseudo-Mercator as their CRS.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\columnwidth]{res/mercator-pyramid.png}\\
-	\caption[]{Mercator Pyramide}
+	\includegraphics[width=0.4\columnwidth]{res/mercator-pyramid}\\
+	\caption[]{Mercator tile pyramid. \url{http://data.webglearth.com/doc/webgl-earthch1.html}}
 	\label{img:mercator-pyramid}
 \end{figure}
 
+
 \subsection{Spatial Data Types}
-GIS files exist in two different types, vector and raster.
+Geo-spatial data exist in two different types, vector and raster. 
 
 \subsubsection{Raster Data}
- Raster data consists of a grid that is filled with color values. Each pixel stores information as a numeric value. These values can be numeric (e.g. for an elevation map) as well as encoded grayscale or color values.\\
- The advantage of raster data is that it can store any kind of GIS. the disadvantages are big files and the fixed pixel resolution. Figure \ref{fig:vector-raster} shows a shape in three different raster resolutions.
- 
+ Raster data consists of a grid matrix in variable size.  Each grid cell is square and filled with a numeric value. The values can be encoded as color (e.g. satellite data) or as simple numeric values (e.g. elevation maps).  \\
+ The advantage of raster data is that it can store any kind of GIS. The disadvantages are big files and the fixed pixel resolution which can not be changed after creation. Figure \ref{img:raster} shows a shape in three different raster resolutions.
  \begin{figure}[H]
  	\centering\includegraphics[width=.5\textwidth]{res/Vector-Raster}
  	\caption{Shape as raster in different resolutions. \url{http://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/what-is-raster-data.htm}}
- 	\label{fig:vector-raster}
+ 	\label{img:raster}
  \end{figure}
 
 \subsubsection{Vector Data}
-Vector GIS on the other hand has a much smaller file size, but is limited in its capabilities. It stores information based on mathematical functions. While this is very efficient, it is not suited for image like data such as land-use or elevation maps.\\
-Data inside vector GIS is called a feature. Features are composed of either points, lines or polygons. It is well suited to store data such as hot-spots, borders, contour lines, etc. 
+Vector GIS has a much smaller file size, but is limited in its capabilities. It stores information based on mathematical functions. This is very efficient, but it is not suited for image like data such as land-use or elevation maps.\\
+Data inside vector GIS can have several layers. Each layer can be of the type points, line or polygon. The data on a layer is called a feature. A point feature has a single coordinate, like a well. lines are open polygon lines and are often used for rivers. Shapes are closed lines and are used for areas like countries, lakes, or larger objects. See figure \ref{img:vector}. \\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\columnwidth]{res/vector-map}\\
+	\caption[]{Vector map with point, polygon and shape. \url{https://commons.wikimedia.org/w/index.php?curid=3024482}}
+	\label{img:vector}
+\end{figure}
 
 
 
