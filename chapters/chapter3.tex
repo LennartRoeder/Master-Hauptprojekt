@@ -1,37 +1,51 @@
 % !TeX spellcheck = en_US
 
 \chapter{Analysis}
-The goal of this work is to create a layer inside the simulation system MARS LIFE that allows loading GIS in an high-performance way. To ensure the practical use to the model developers use-cases were taken into account to generate requirements for the implementation.
+The goal of this work is to create a layer inside the simulation system MARS LIFE that allows loading geo-spatial data in an high-performance way. To ensure the practical use to the model developers, use-cases were taken into account to generate requirements for the implementation.
 
 
 
 \section{Use-Cases}
 \begin{usecase}
-	\addtitle{Vector I}{Read all features}
+	\addtitle{Vector I}{Open Vector file for reading}
+	\addfield{Summary:}{Open Shapefile that was imported prior to the simulation creation.}
+	\additemizedfield{Preconditions:}{
+		\item The vector file was imported and mapped prior to the simulation run.
+		\item The Shapefile is valid (containing at least a .shp, .shx and .dbf file).
+	}
+	\additemizedfield{Primary Scenario:}{
+		\item Initiate a vector GIS layer inside the model from a file and enable agents to access it.
+	}
+	%	\additemizedfield{Alternative Scenario:}{
+	%		\item The user clicks the upload button, browses files of his local machine, fills the form for every file and starts the import.
+	%	}
+\end{usecase}
+
+\begin{usecase}
+	\addtitle{Vector II}{Read all features}
 	\addfield{Summary:}{Read features from a vector file with the following types: 
-		\begin{itemize}[itemsep=-.25em]
+		\begin{itemize}[itemsep=-.5em,topsep=.25em]
 			\item Point
-			\item Polyline
+			\item Line
 			\item Polygon
 		\end{itemize}
 	}
 	\additemizedfield{Preconditions:}{
 		\item The vector file was imported prior to the simulation run.
+		\item The vector file is open.
 	}
 	\additemizedfield{Primary Scenario:}{
-		\item A layer wants to read the positions of agents during the initialization.
+		\item A layer wants to read the positions of all agents during the initialization.
 	}
-%	\additemizedfield{Alternative Scenario:}{
-%		\item The user clicks the upload button, browses files of his local machine, fills the form for every file and starts the import.
-%	}
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Vector II}{Read feature at position}
+	\addtitle{Vector III}{Read feature at position}
 	\addfield{Summary:}{Read the closest feature to a GPS position.
 	}
 	\additemizedfield{Preconditions:}{
 		\item The vector file was imported prior to the simulation run.
+		\item The file is open.
 	}
 	\additemizedfield{Primary Scenario:}{
 		\item An agent wants to find a point of interest in his area (e.g. An elephant looking for the closest waterhole).
@@ -39,11 +53,12 @@ The goal of this work is to create a layer inside the simulation system MARS LIF
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Vector III}{Calculate distance between features}
-	\addfield{Summary:}{A function that takes two features of different types as input and returns the distance in meters.
+	\addtitle{Vector IV}{Calculate distance between features}
+	\addfield{Summary:}{A function that takes two features as input and returns the distance in meters.
 	}
 	\additemizedfield{Preconditions:}{
 		\item Both features exist and are available to the layer.
+		\item The file is open.
 	}
 	\additemizedfield{Primary Scenario:}{
 		\item An agent wants to know the distance to a specific point of interest.
@@ -51,7 +66,35 @@ The goal of this work is to create a layer inside the simulation system MARS LIF
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Raster I}{Read all pixels}
+	\addtitle{Vector V}{Calculate if feature overlaps another}
+	\addfield{Summary:}{A function that takes two features as input and returns true if they overlap.
+	}
+	\additemizedfield{Preconditions:}{
+		\item Both features exist and are available to the layer.
+		\item One Feature has to be of type polygon
+		\item The file is open.
+	}
+	\additemizedfield{Primary Scenario:}{
+		\item An agent wants to know the distance to a specific point of interest.
+	}
+\end{usecase}
+
+
+\begin{usecase}
+	\addtitle{Raster I}{Open Raster for reading}
+	\addfield{Summary:}{Open raster that was imported prior to the simulation creation.}
+	\additemizedfield{Preconditions:}{
+		\item The file was imported and mapped prior to the simulation run.
+		\item The file is valid and geo-referenced.
+	}
+	\additemizedfield{Primary Scenario:}{
+		\item Initiate a raster GIS layer inside the model from a file and enable agents to access it.
+	}
+\end{usecase}
+
+
+\begin{usecase}
+	\addtitle{Raster II}{Read all pixels}
 	\addfield{Summary:}{Read all pixels from a raster file supported by the GIS-data-service.
 	}
 	\additemizedfield{Preconditions:}{
@@ -63,8 +106,8 @@ The goal of this work is to create a layer inside the simulation system MARS LIF
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Raster II}{Read pixel at position}
-	\addfield{Summary:}{Read the closest non null pixel on a specific layer to a GPS position.
+	\addtitle{Raster III}{Read pixel at position}
+	\addfield{Summary:}{Read the closest non no-data pixel on a specific layer to a GPS position.
 	}
 	\additemizedfield{Preconditions:}{
 		\item The raster file was imported prior to the simulation run.
@@ -75,8 +118,8 @@ The goal of this work is to create a layer inside the simulation system MARS LIF
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Raster III}{Calculate distance between Pixels}
-	\addfield{Summary:}{A function that takes two pixel coordinates as input and returns the distance in meters.
+	\addtitle{Raster IV}{Calculate distance between Pixels}
+	\addfield{Summary:}{A function that takes two GPS coordinates as input and returns the distance in kilometers.
 	}
 	\additemizedfield{Preconditions:}{
 		\item Both features exist and are available to the layer.
@@ -87,19 +130,28 @@ The goal of this work is to create a layer inside the simulation system MARS LIF
 \end{usecase}
 
 \section{Requirements}
-
+The following requirements were extracted from the use-cases.
 
 \subsection{Functional Requirements}
 \reqstartF
-	\item Point and area
-	\item GPS position
-	\item Determine distance to a feature (POI)
-	\item Check if position overlaps with a polygon
-	\item Follow polygon (e.g. rivers)
+	\item Open vector file.
+	\item Read all Features from file into a local data structure.
+	\item Read all features at a GPS position.
+	\item Calculate distance between features.
+	\item Determine if features overlap.\\
+	\item Open raster file.
+	\item Read all pixels from a raster into a local data structure.
+	\item Read a pixel at a specific GPS position.
+	\item Read a pixel at a cartesian position.
+	\item Calculate distance between Pixels.
+	\item Calculate distance between GPS positions.
 \reqendF
 
 
 \subsection{Non-Functional Requirements}
-%\reqstartNF
-%\item 
-%\reqendNF
+\reqstartNF
+	\item 10,000 agents, each reading a features in parallel takes less than 10 seconds (1 ms per read).
+	\item 10,000 agents, each reading a pixels in parallel takes less than 10 seconds (1 ms per read).
+	\item Errors are handled to prevent simulation crashes.
+	\item Log messages are written to stdout.
+\reqendNF
