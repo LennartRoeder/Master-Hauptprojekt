@@ -150,8 +150,10 @@ The following requirements were extracted from the use-cases.
 
 \subsection{Non-Functional Requirements}
 \reqstartNF
-	\item 10,000 agents, each reading a features in parallel takes less than 10 seconds (1 ms per read).
-	\item 10,000 agents, each reading a pixels in parallel takes less than 10 seconds (1 ms per read).
+	\item 1,000 agents, each reading a features in parallel takes less than 1 second (1 ms/read).
+	\item 1,000 agents, each reading a pixels in parallel takes less than 1 second (1 ms/read).
 	\item Errors are handled to prevent simulation crashes.
 	\item Log messages are written to stdout.
+	\item Integration into MARS LIFE
+	\item .NET Core compatibility
 \reqendNF
