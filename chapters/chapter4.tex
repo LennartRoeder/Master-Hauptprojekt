@@ -32,13 +32,13 @@ The current models therefore do not leverage GIS for their input. Data is being 
 
 
 \section{Solutions}
-As mentioned in section \ref{sec:GS} reading data from the GS in real time is not feasible for a high performance environment.\\
-Different alternative solutions have been discovered and evaluated. The files could be stored inside a spatial database (PostGIS or MongoDB) that is optimized for parallel reads of single values or the GIS file could be supplied to the Simulation and stored in memory for fast reading.
+As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment.\\
+Different alternative solutions have been discovered and evaluated. The data could be stored inside a spatial database that is optimized for parallel reads of single values or the GIS file could be supplied to the Simulation and stored in memory for fast reading.
 
 \begin{table}[]
 	\centering
-	\caption{My caption}
-	\label{my-label}
+	\caption{GIS solutions feature comparison}
+	\label{fig:feature_comparison}
 	\begin{tabular}{|l|l|l|l|}
 	\hline \textbf{Name}	& \textbf{Raster support} & \textbf{Vector support} & \textbf{Type} \\
 	\hline GeoServer & yes & yes & self-hosted product \\
@@ -136,7 +136,7 @@ xlabel={Time in ms},
 % Large Rasterfile
 \addplot coordinates {
 	(26786,Geoserver)
-	(-1,PostGis) % 342197
+	(nan,PostGis) % 342197
 	(273,DotSpatial)
 	(467,Local)
 };
