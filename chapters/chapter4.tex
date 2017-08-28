@@ -76,24 +76,24 @@ The results are listed in figure \ref{fig:vector_performace} for vector and \ref
 		(23103,Geoserver)
 		(160,PostGis)
 		(135,MongoDB)
-		(86,DotSpatial)
-		(6,NetTopologySuite)
+		(89,DotSpatial)
+		(2,NetTopologySuite)
 	};
 	% Mid Shapefile
 	\addplot coordinates {
 		(25307,Geoserver)
 		(410,PostGis)
 		(168,MongoDB)
-		(251,DotSpatial)
-		(193,NetTopologySuite)
+		(244,DotSpatial)
+		(178,NetTopologySuite)
 	};
 	% Large Shapefile
 	\addplot coordinates {
 		(67727,Geoserver)
 		(4789,PostGis)
 		(223,MongoDB)
-		(620,DotSpatial)
-		(248,NetTopologySuite)
+		(602,DotSpatial)
+		(355,NetTopologySuite)
 	};
 	\legend{Small Shapefile (12 KB),Medium Shapefile (6.5 MB),Large Shapefile (103.8 MB)}
 	\end{axis}
@@ -122,21 +122,21 @@ The results are listed in figure \ref{fig:vector_performace} for vector and \ref
 		(22202,Geoserver)
 		(210,PostGis)
 		(13,AsciiGrid Parser)
-		(4,DotSpatial)
+		(3,DotSpatial)
 	};
 	% Mid Rasterfile
 	\addplot coordinates {
 		(24438,Geoserver)
 		(1964,PostGis)
 		(311,AsciiGrid Parser)
-		(185,DotSpatial)
+		(33,DotSpatial)
 	};
 	% Large Rasterfile
 	\addplot coordinates {
 		(26786,Geoserver)
 		(nan,PostGis) % 342197
-		(467,AsciiGrid Parser)
-		(273,DotSpatial)
+		(435,AsciiGrid Parser)
+		(400,DotSpatial)
 	};
 	\legend{Small raster (8 KB),Medium raster (6.4 MB),Large raster (105.2 MB)}
 	\end{axis}
@@ -157,12 +157,22 @@ MongoDB offeres good overall performance for vector data. The file size does not
 
 
 \subsection{DotSpatial}
-DotSpatial offers average vector read performance. MongoDB and NTS perform slightly better. Since both these technologies are not available for raster GIS, DotSpatial performes best in that field.\\
+DotSpatial offers average vector read performance. MongoDB and NTS perform slightly better. Since both these technologies are not available for raster GIS, DotSpatial performs best in that field.\\
 As of August 25th 2017 the library has not been ported to .NET Core. This is why an .NET Core compatible Esri AsciiGrid parser was created.\\
-The performance measurement for DotSpatial and NTS are different to the database solutions. The way both libraries work is, that they open the file into RAM and read from it. The read performance from RAM for the mentioned scenario is around 0.02 ms for both technologies. Since the file can be loaded once and read from during the simulation, the increased time for additional reads is very low, making these solution preferable.
+
 
 \subsection{NetTopologySuite}
-NTS has the best vector read performance and shares the same RAM based performance benefits as DotSpatial. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core.
+NTS has the best vector read performance and shares the same RAM based performance benefits as DotSpatial. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core.\\
+
+
+\subsection{AsciiGrid Parser}
+Since DotSpatial is not ported to .NET Core yet, there is no acceptable solution for reading raster GIS during the simulation. This is, why the author of this work created a parser for Esri's AsciiGrid format.\\
+AsciiGrid is a text-based, geo-referenced raster format that other raster formats like GeoTIFF can be converted into. Due to the text-based nature of the format the read performance is not as good as the DotSpatial reader. It is however acceptable until DotSpatial gets migrated.
+
+\subsection{Additional notes}
+The performance measurement for the local libraries (NTS, DotSpatial and the AsciiGrid Parser) are different to the database solutions. The way these libraries work is, that they open the file into RAM and read from it. The read performance from RAM for the mentioned scenario is much better. Since the file can be loaded once and read from during the simulation, the time increase for additional reads is very low, making these solution preferable.\\
+The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. For vector GIS, NTS 
+
 
 \begin{figure}[H]
 	\begin{tikzpicture}
@@ -171,29 +181,32 @@ NTS has the best vector read performance and shares the same RAM based performan
 	y axis line style = { opacity = 0 },
 	axis x line       = bottom,
 	tickwidth         = 0pt,
-	enlarge y limits  = 0.7,
-	enlarge x limits  = 0.15,
-	symbolic y coords = {NetTopologySuite, MongoDB},
+	enlarge y limits  = 0.27,
+	enlarge x limits  = 0.01,
+	symbolic y coords = {NetTopologySuite, DotSpatial, MongoDB},
 	ytick=data,
 	nodes near coords,
-	height=5cm,
+	height=6cm,
 	legend style={at={(1.58,0.55)},anchor=north},
 	xlabel={Time in ms},
 	]
 	% Small Shapefile
 	\addplot coordinates {
 		(1221,MongoDB)
-		(6,NetTopologySuite)
+		(100,DotSpatial)
+		(3,NetTopologySuite)
 	};
 	% Mid Shapefile
 	\addplot coordinates {
 		(1468,MongoDB)
-		(195,NetTopologySuite)
+		(457,DotSpatial)
+		(179,NetTopologySuite)
 	};
 	% Large Shapefile
 	\addplot coordinates {
 		(1814,MongoDB)
-		(173,NetTopologySuite)
+		(644,DotSpatial)
+		(396,NetTopologySuite)
 	};
 	\legend{Small Shapefile (12 KB),Medium Shapefile (6.5 MB),Large Shapefile (103.8 MB)}
 	\end{axis}
@@ -221,20 +234,20 @@ NTS has the best vector read performance and shares the same RAM based performan
 	% Small Raster
 	\addplot coordinates {
 		(2467,PostGis)
-		(3,DotSpatial)
+		(4,DotSpatial)
 		(14,AsciiGrid Parser)
 	};
 	% Mid Raster
 	\addplot coordinates {
 		(18151,PostGis)
 		(34,DotSpatial)
-		(436,AsciiGrid Parser)
+		(320,AsciiGrid Parser)
 	};
 	% Large Raster
 	\addplot coordinates {
 		(nan,PostGis)
-		(514,DotSpatial)
-		(724,AsciiGrid Parser)
+		(553,DotSpatial)
+		(437,AsciiGrid Parser)
 	};
 	\legend{Small raster (8 KB),Medium raster (6.4 MB),Large raster (105.2 MB)}
 	\end{axis}
@@ -242,9 +255,3 @@ NTS has the best vector read performance and shares the same RAM based performan
 	\caption{Raster performance for 10k reads}
 	\label{fig:raster_performace_best}
 \end{figure}
-
-
-\subsection{AsciiGrid Parser}
-Since DotSpatial is not ported to .NET Core yet, there is no acceptable solution for reading raster GIS during the simulation. This is, why the author of this work created a parser for Esri's AsciiGrid format.\\
-AsciiGrid is a text-based, geo-referenced raster format that other raster formats like GeoTIFF can be converted into. Due to the text-based nature of the format the read performance is not as good as the DotSpatial reader. It is however acceptable until DotSpatial gets migrated.
-
