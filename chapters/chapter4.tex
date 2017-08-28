@@ -36,24 +36,25 @@ As mentioned in section \ref{sec:GS} reading data from the GS during the simulat
 Different alternative solutions have been discovered and evaluated. The data could be stored inside a spatial database that is optimized for parallel reads of single values or the GIS file could be supplied to the Simulation and stored in memory for fast reading. Figure \ref{fig:feature_comparison} shows an overview of the evaluated technologies.
 
 \begin{table}[H]
-	\centering
 	\caption{GIS solutions feature comparison}
 	\label{fig:feature_comparison}
 	\begin{tabular}{|l|l|l|l|}
-	\hline \textbf{Name}	& \textbf{Raster support} & \textbf{Vector support} & \textbf{Type} \\
-	\hline GeoServer & yes & yes & self-hosted product \\
-	\hline PostGIS	& yes* & yes & Database \\
-	\hline MongoDB	& no & yes & Database \\
-	\hline Dotspatial & yes & yes & C\# library \\
-	\hline NetTopologySuite	& no & yes & C\# library \\
+	\hline \textbf{Name}	& \textbf{Raster support} & \textbf{Vector support} & \textbf{Type}\\
+	\hline GeoServer & yes & yes & self-hosted product\\
+	\hline PostGIS	& yes* & yes & PostgreSQL DB + GIS ext.\\
+	\hline MongoDB	& no & yes & DB with spatial capabilities\\
+	\hline Dotspatial & yes & yes & C\# library\\
+	\hline NetTopologySuite	& no & yes & C\# library\\
+	\hline AsciiGrid Parser & yes & no & Own .NET Core Class\\
 	\hline
 	\end{tabular}
+	\caption*{ \raggedright * Large file failed.}
 \end{table}
 
 
 \subsection{Performance comparison}
 All mentioned technologies were tested with the same input files. A small, a medium and a large size vector and raster file. The file sizes were ~10 KB, ~6.5 MB and ~105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate tests. 
-The results are listed in figure \ref{fig:vector_performace} and \ref{fig:raster_performace}
+The results are listed in figure \ref{fig:vector_performace} for vector and \ref{fig:raster_performace} for raster.
 
 \begin{figure}[H]
 	\begin{tikzpicture}
@@ -66,8 +67,8 @@ The results are listed in figure \ref{fig:vector_performace} and \ref{fig:raster
 	enlarge x limits  = 0.02,
 	symbolic y coords = {NetTopologySuite, DotSpatial, MongoDB, PostGis, Geoserver},
 	nodes near coords,
-	height=9cm,
-	legend style={at={(0.8,0.25)},anchor=north},
+	height=9.5cm,
+	legend style={at={(0.737,0.25)},anchor=north},
 	xlabel={Time in ms},
 	]
 	% Small Shapefile
@@ -94,7 +95,7 @@ The results are listed in figure \ref{fig:vector_performace} and \ref{fig:raster
 		(620,DotSpatial)
 		(248,NetTopologySuite)
 	};
-	\legend{Small Shapefile (12 KB), Medium Shapefile (6.5 MB), Large Shapefile (103.8 MB)}
+	\legend{Small Shapefile (12 KB),Medium Shapefile (6.5 MB),Large Shapefile (103.8 MB)}
 	\end{axis}
 	\end{tikzpicture}
 	\caption{Vector performance for 1k reads}
@@ -113,7 +114,7 @@ The results are listed in figure \ref{fig:vector_performace} and \ref{fig:raster
 	enlarge x limits  = 0.02,
 	symbolic y coords = {DotSpatial, AsciiGrid Parser, PostGis, Geoserver},
 	nodes near coords,
-	legend style={at={(0.8,0.32)},anchor=north},
+	legend style={at={(0.68,0.32)},anchor=north},
 	xlabel={Time in ms},
 	]
 	% Small Rasterfile
@@ -137,7 +138,7 @@ The results are listed in figure \ref{fig:vector_performace} and \ref{fig:raster
 		(467,AsciiGrid Parser)
 		(273,DotSpatial)
 	};
-	\legend{Small raster (8 KB), Medium raster (6.4 MB), Large raster (105.2 MB)}
+	\legend{Small raster (8 KB),Medium raster (6.4 MB),Large raster (105.2 MB)}
 	\end{axis}
 	\end{tikzpicture}
 	\caption{Raster performance for 1k reads}
@@ -162,6 +163,85 @@ The performance measurement for DotSpatial and NTS are different to the database
 
 \subsection{NetTopologySuite}
 NTS has the best vector read performance and shares the same RAM based performance benefits as DotSpatial. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core.
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	xbar,
+	y axis line style = { opacity = 0 },
+	axis x line       = bottom,
+	tickwidth         = 0pt,
+	enlarge y limits  = 0.7,
+	enlarge x limits  = 0.15,
+	symbolic y coords = {NetTopologySuite, MongoDB},
+	ytick=data,
+	nodes near coords,
+	height=5cm,
+	legend style={at={(1.58,0.55)},anchor=north},
+	xlabel={Time in ms},
+	]
+	% Small Shapefile
+	\addplot coordinates {
+		(1221,MongoDB)
+		(6,NetTopologySuite)
+	};
+	% Mid Shapefile
+	\addplot coordinates {
+		(1468,MongoDB)
+		(195,NetTopologySuite)
+	};
+	% Large Shapefile
+	\addplot coordinates {
+		(1814,MongoDB)
+		(173,NetTopologySuite)
+	};
+	\legend{Small Shapefile (12 KB),Medium Shapefile (6.5 MB),Large Shapefile (103.8 MB)}
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Vector performance for 10k reads}
+	\label{fig:vector_performace_best}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+	\begin{axis}[
+	xbar,
+	y axis line style = { opacity = 0 },
+	axis x line       = bottom,
+	tickwidth         = 0pt,
+	enlarge y limits  = 0.27,
+	enlarge x limits  = 0.15,
+	symbolic y coords = {AsciiGrid Parser, DotSpatial, PostGis},
+	ytick=data,
+	nodes near coords,
+	height=6cm,
+	legend style={at={(1.41,0.45)},anchor=north},
+	xlabel={Time in ms},
+	]
+	% Small Raster
+	\addplot coordinates {
+		(2467,PostGis)
+		(3,DotSpatial)
+		(14,AsciiGrid Parser)
+	};
+	% Mid Raster
+	\addplot coordinates {
+		(18151,PostGis)
+		(34,DotSpatial)
+		(436,AsciiGrid Parser)
+	};
+	% Large Raster
+	\addplot coordinates {
+		(nan,PostGis)
+		(514,DotSpatial)
+		(724,AsciiGrid Parser)
+	};
+	\legend{Small raster (8 KB),Medium raster (6.4 MB),Large raster (105.2 MB)}
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Raster performance for 10k reads}
+	\label{fig:raster_performace_best}
+\end{figure}
 
 
 \subsection{AsciiGrid Parser}
