@@ -16,7 +16,7 @@ The WebUI supports GIS for importing and managing this kind of data. It's succes
 The back-end services fully support GIS. The file service accepts the uploaded files and hands control over to the GIS Data Service (GDS). 
 
 \subsubsection{GIS Data Service}
-The GDS is capable of handling the most common GIS types, these are Geotiff and Esri AsciiGrid for raster and Shapefile for vector files. The files may be provided compressed inside a .zip file or as plain files.\\
+The GDS is capable of handling the most common GIS types, these are Geotiff and Esri ASCII grid for raster and Shapefile for vector files. The files may be provided compressed inside a .zip file or as plain files.\\
 During the import the GDS determines the type of data automatically by checking the file extension. Once detected, the file is validated and the spatial reference is determined. In case of a valid geo-referenced input, the file is imported into the GeoServer for persistence.
 
 
@@ -26,14 +26,14 @@ The Web Feature Service (WFS) allows to retrieve features of vector data, Web Co
 The GS is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of  single values in parallel in a short amount of time. The GS does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files. The performance for retrieving data is also very poor which will require a better solution.
 
 
-\subsection{GIS Layer}
+\subsection{LIFE -- GIS Layer}
 The GIS Layer inside MARS LIFE reads the Data provided by the GDS and uses it inside the simulation. Since the migration from C\# to .NET Core inside LIFE the GIS layer is not compatible anymore.\\
 The current models therefore do not leverage GIS for their input. Data is being transfered into other formats to work around these shortcomings. Vector data is mainly represented as comma separated values (.csv) files and raster data are represented in custom formats.
 
 
 \section{Solutions}
 As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment.\\
-Different alternative solutions have been discovered and evaluated. The data could be stored inside a spatial database that is optimized for parallel reads of single values or the GIS file could be supplied to the Simulation and stored in memory for fast reading. Figure \ref{fig:feature_comparison} shows an overview of the evaluated technologies.
+Different alternative solutions have been discovered and evaluated. Figure \ref{fig:feature_comparison} shows an overview of these technologies.
 
 \begin{table}[H]
 	\caption{GIS solutions feature comparison}
@@ -45,15 +45,13 @@ Different alternative solutions have been discovered and evaluated. The data cou
 	\hline MongoDB	& no & yes & DB with spatial capabilities\\
 	\hline Dotspatial & yes & yes & C\# library\\
 	\hline NetTopologySuite	& no & yes & C\# library\\
-	\hline AsciiGrid Parser & yes & no & Own .NET Core Class\\
+	\hline AsciiGridParser & yes & no & Own .NET Core Component\\
 	\hline
 	\end{tabular}
 	\caption*{ \raggedright * Large file failed.}
 \end{table}
 
-
-\subsection{Performance comparison}
-All mentioned technologies were tested with the same input files. A small, a medium and a large size vector and raster file. The file sizes were ~10 KB, ~6.5 MB and ~105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate tests. 
+All mentioned technologies were performance tested with the same input files. A small, medium and a large size vector and raster file. The sizes were ~10 KB, ~6.5 MB and ~105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate tests. 
 The results are listed in figure \ref{fig:vector_performace} for vector and \ref{fig:raster_performace} for raster.
 
 \begin{figure}[H]
@@ -112,7 +110,7 @@ The results are listed in figure \ref{fig:vector_performace} for vector and \ref
 	tickwidth         = 0pt,
 	enlarge y limits  = 0.15,
 	enlarge x limits  = 0.02,
-	symbolic y coords = {DotSpatial, AsciiGrid Parser, PostGis, Geoserver},
+	symbolic y coords = {DotSpatial, AsciiGridParser, PostGis, Geoserver},
 	nodes near coords,
 	legend style={at={(0.68,0.32)},anchor=north},
 	xlabel={Time in ms},
@@ -121,21 +119,21 @@ The results are listed in figure \ref{fig:vector_performace} for vector and \ref
 	\addplot coordinates {
 		(22202,Geoserver)
 		(210,PostGis)
-		(13,AsciiGrid Parser)
+		(13,AsciiGridParser)
 		(3,DotSpatial)
 	};
 	% Mid Rasterfile
 	\addplot coordinates {
 		(24438,Geoserver)
 		(1964,PostGis)
-		(311,AsciiGrid Parser)
+		(311,AsciiGridParser)
 		(33,DotSpatial)
 	};
 	% Large Rasterfile
 	\addplot coordinates {
 		(26786,Geoserver)
 		(nan,PostGis) % 342197
-		(435,AsciiGrid Parser)
+		(435,AsciiGridParser)
 		(400,DotSpatial)
 	};
 	\legend{Small raster (8 KB),Medium raster (6.4 MB),Large raster (105.2 MB)}
@@ -158,21 +156,22 @@ MongoDB offeres good overall performance for vector data. The file size does not
 
 \subsection{DotSpatial}
 DotSpatial offers average vector read performance. MongoDB and NTS perform slightly better. Since both these technologies are not available for raster GIS, DotSpatial performs best in that field.\\
-As of August 25th 2017 the library has not been ported to .NET Core. This is why an .NET Core compatible Esri AsciiGrid parser was created.\\
+As of August 25th 2017 the library has not been ported to .NET Core. This is why an .NET Core compatible Esri AsciiGridParser was created.\\
 
 
 \subsection{NetTopologySuite}
 NTS has the best vector read performance and shares the same RAM based performance benefits as DotSpatial. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core.\\
 
 
-\subsection{AsciiGrid Parser}
-Since DotSpatial is not ported to .NET Core yet, there is no acceptable solution for reading raster GIS during the simulation. This is, why the author of this work created a parser for Esri's AsciiGrid format.\\
-AsciiGrid is a text-based, geo-referenced raster format that other raster formats like GeoTIFF can be converted into. Due to the text-based nature of the format the read performance is not as good as the DotSpatial reader. It is however acceptable until DotSpatial gets migrated.
+\subsection{AsciiGridParser}
+Since DotSpatial is not ported to .NET Core yet, there is no acceptable solution for reading raster GIS during the simulation. This is, why the author of this work created a parser for Esri's ASCII grid format.\\
+ASCII grid is a text-based, geo-referenced raster format that other raster formats like GeoTIFF can be converted into. Due to the text-based nature of the format the read performance is not as good as the DotSpatial reader. It is however acceptable until DotSpatial gets migrated.
 
-\subsection{Additional notes}
-The performance measurement for the local libraries (NTS, DotSpatial and the AsciiGrid Parser) are different to the database solutions. The way these libraries work is, that they open the file into RAM and read from it. The read performance from RAM for the mentioned scenario is much better. Since the file can be loaded once and read from during the simulation, the time increase for additional reads is very low, making these solution preferable.\\
-The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. For vector GIS, NTS 
 
+
+\section{Results}
+The performance measurement for the local libraries (NTS, DotSpatial and the AsciiGridParser) are different to the database solutions. These libraries open the file into RAM and read from it. Reading takes the majority of the time, while reads from RAM is much faster. Since the file can be loaded once and read from during the simulation, the time increase for additional reads is very low, making these solution preferable at scale.\\
+The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. The read times for local libraries is increased by a few seconds, while MongoDB and PostGis take almost 10 times as much time. With agent counts of 5 million the described effect becomes even more extreme, in favor of NTS, DotSpatial and the AsciiGridParser.
 
 \begin{figure}[H]
 	\begin{tikzpicture}
@@ -187,7 +186,7 @@ The additional performance tests in \ref{fig:vector_performace_best} and \ref{fi
 	ytick=data,
 	nodes near coords,
 	height=6cm,
-	legend style={at={(1.58,0.55)},anchor=north},
+	legend style={at={(0.95,0.42)},anchor=north},
 	xlabel={Time in ms},
 	]
 	% Small Shapefile
@@ -224,30 +223,30 @@ The additional performance tests in \ref{fig:vector_performace_best} and \ref{fi
 	tickwidth         = 0pt,
 	enlarge y limits  = 0.27,
 	enlarge x limits  = 0.15,
-	symbolic y coords = {AsciiGrid Parser, DotSpatial, PostGis},
+	symbolic y coords = {AsciiGridParser, DotSpatial, PostGis},
 	ytick=data,
 	nodes near coords,
 	height=6cm,
-	legend style={at={(1.41,0.45)},anchor=north},
+	legend style={at={(0.95,0.42)},anchor=north},
 	xlabel={Time in ms},
 	]
 	% Small Raster
 	\addplot coordinates {
 		(2467,PostGis)
 		(4,DotSpatial)
-		(14,AsciiGrid Parser)
+		(14,AsciiGridParser)
 	};
 	% Mid Raster
 	\addplot coordinates {
 		(18151,PostGis)
 		(34,DotSpatial)
-		(320,AsciiGrid Parser)
+		(320,AsciiGridParser)
 	};
 	% Large Raster
 	\addplot coordinates {
 		(nan,PostGis)
 		(553,DotSpatial)
-		(437,AsciiGrid Parser)
+		(437,AsciiGridParser)
 	};
 	\legend{Small raster (8 KB),Medium raster (6.4 MB),Large raster (105.2 MB)}
 	\end{axis}
