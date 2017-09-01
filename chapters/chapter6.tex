@@ -5,7 +5,10 @@
 
 
 \section{Conclusion}
-
+This work described the process of optimizing the GIS read performance inside the MARS LIFE system as well as the implementation of a vector and raster GIS layer. The new layers satisfy the requirement of .NET Core compatibility and significantly improve performance compared to the old implementation.
 
 
 \section{Outlook}
+The .NET Core support for DotSpatial might come in the future. Migrating to it could save some memory due to the smaller binary raster GIS files. This is however no critical change since it can be done with minimal effort and no effect to model code relying on the raster GIS layer.\\
+Storage of geo-spatial files inside the GeoServer is debatable. Currently it is simply used for storing and retrieving files. The only functionally used is the conversion of GeoTiff to AsciiGrid. This functionality could be taken over by the GIS-Data-Service that controls the GeoServer. Since files are stored in the filesystem the files could be directly written to the filesystem or stored inside a more lightweight storage system like PostGIS.\\
+Management of GIS can be further improved. Functionality that aggregates and correlates data during import is possible. This could combine input data to a common spatial area, save space and help gain information over several input files.
