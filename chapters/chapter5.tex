@@ -1,14 +1,14 @@
 % !TeX spellcheck = en_US
 
 \chapter{Implementation}
-This chapter describes the technical problems, how they were overcome and the integration of the software into the MARS LIFE system.
+This chapter describes the technical problems, how they were overcome during integration into the MARS LIFE system.
 
 
 
 \section{Technical limitations}
 Implementing the GIS layer was done in a predefined environment. To meet the given requirements certain limitations had to be overcome.\\
 The biggest one was the usage of .NET Core in combination with the GIS domain. GIS processing is a very specialized field in computing and is used by a small community. The community has a very domain focused background, rather than a technical one. This being said, the community has settled on two main technologies; python and R.\\
-Outside these two languages the number of usable libraries is limited. C\# on the other hand has a big corporate user-base that focuses on big business applications, making it less attractive for people from the GIS domain. As a result library support for C\# is very limited. Currently there are only two serious libraries to choose from, namely NetTopologySuite and DotSpatial.\\
+Outside these two languages the number of usable libraries is limited. C\# on the other hand has a big corporate user-base that focuses on big business applications, making it less attractive for people from the GIS domain. As a result library support for C\# is extremely limited. Currently there are only two serious libraries to choose from, namely NetTopologySuite and DotSpatial.\\
 
 
 \subsection{.NET Core}
@@ -35,7 +35,7 @@ Since August 2017 the issue for .NET Core 1.1 compatibility has been closed, all
 \subsection{Raster GIS Layer -- AsciiGridParser}
 \label{sec:parser}
 Due to the incompatibility of DotSpatial an alternative solution had to be created to handle raster GIS. With the lack of core libraries that support any kind of image processing supporting GeoTIFF was not worth the effort.\\
-To do so, image processing, as well ass certain image compression mechanism would have to be implemented. Considering the current design, this effort would have been able to speed up initialization time, but not runtime performance. Therefor the text-based Esri AsciiGrid format hast been chosen.\\
+To do so, image processing, as well ass certain image compression mechanism would have had to be implemented. Considering the current design, this effort would have been able to speed up initialization time, but not runtime performance. Therefor the text-based Esri AsciiGrid format hast been chosen.\\
 AsciiGrid has larger file size, but zip compression can dramatically reduce this size. The conversion into a zipped AsciiGrid is done by the GeoServer on export.\\
 The way the parser works is that it opens the data file during the initialization and parses the metadata into local variables and the payload into a multi-dimensional array. This reduces the complex and time consuming portion of the process to a one time operation. Thereafter, reads can be done via index access on the array, which is almost instant, allows millions of reads within milliseconds.\\
 The parser offers methods for a more convenient workflow, as specified in section \ref{sec:requirements}. The easiest way to query the raster file is by X and Y coordinates of the desired pixel. It is however more practical to request based on a GPS position. Additionally it is possible to calculate the distance between pixels and GPS position.\\

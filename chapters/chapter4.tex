@@ -34,11 +34,11 @@ The current models therefore do not leverage GIS for their input. Data is being 
 \section{Solutions}
 As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment.\\
 Figure \ref{img:spatial-queries} shows that local GIS libraries tend to drastically outperform database solutions. For this reason local libraries were also considered during the evaluation. Hadoop-GIS with MapReduce as suggested by \cite{Wang2011} offers very good scalability but does not support the hight IO and low latency focused use-case of the MARS system. Further methods were suggested by \cite{Pavlo2009}.\\
-Figure \ref{fig:feature_comparison} shows an overview of the technologies which have been considered to be beneficial. The main criteria for choosing these libraries and databases were geo-spatial capabilities, compatibility to .NET Core and performance.
+Figure \ref{fig:feature_comparison} shows an overview of the technologies which have been considered to be beneficial. The main criteria for choosing these libraries and databases were geospatial capabilities, compatibility to .NET Core and performance.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\columnwidth]{res/spatial-queries}\\
+	\includegraphics[width=0.8\columnwidth]{res/spatial-queries}\\
 	\caption[]{Processing time on spatial queries by \cite{Witayangkurn2012}}
 	\label{img:spatial-queries}
 \end{figure}
@@ -49,19 +49,19 @@ Figure \ref{fig:feature_comparison} shows an overview of the technologies which 
 	\label{fig:feature_comparison}
 	\begin{tabular}{|l|l|l|l|}
 	\hline \textbf{Name}	& \textbf{Raster support} & \textbf{Vector support} & \textbf{Type}\\
-	\hline GeoServer & yes & yes & self-hosted product\\
-	\hline PostGIS	& yes* & yes & PostgreSQL DB + GIS ext.\\
-	\hline MongoDB	& no & yes & DB with spatial capabilities\\
-	\hline Dotspatial & yes & yes & C\# library\\
-	\hline NetTopologySuite	& no & yes & C\# library\\
-	\hline AsciiGridParser & yes & no & Own .NET Core Component\\
+	\hline GeoServer & Yes & Yes & Self-hosted product\\
+	\hline PostGIS	& Yes* & Yes & PostgreSQL DB + GIS ext.\\
+	\hline MongoDB	& No & Yes & DB with spatial capabilities\\
+	\hline Dotspatial & Yes & Yes & C\# library\\
+	\hline NetTopologySuite	& No & Yes & C\# library\\
+	\hline AsciiGridParser & Yes & No & Own .NET Core Component\\
 	\hline
 	\end{tabular}
 	\caption*{ \raggedright * Large file failed.}
 \end{table}
 
-All mentioned technologies were performance tested with the same input files. A small, medium and a large size vector and raster file. The sizes were ~10 KB, ~6.5 MB and ~105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate tests. 
-The results are listed in figure \ref{fig:vector_performace} for vector and \ref{fig:raster_performace} for raster.
+All mentioned technologies were performance tested with the same input files. A small, medium and a large size vector and raster file. The sizes were 10 KB, 6.5 MB and 105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate tests. 
+The results are listed in figure \ref{fig:vector_performace} for vector and \ref{fig:raster_performace} for raster inputs.
 
 \begin{figure}[H]
 	\begin{tikzpicture}
@@ -165,22 +165,22 @@ MongoDB offeres good overall performance for vector data. The file size does not
 
 \subsection{DotSpatial}
 DotSpatial offers average vector read performance. MongoDB and NTS perform slightly better. Since both these technologies are not available for raster GIS, DotSpatial performs best in that field.\\
-As of August 25th 2017 the library has not been ported to .NET Core. This is why an .NET Core compatible Esri AsciiGridParser was created.\\
+As of August 25th 2017 the library has not been ported to .NET Core. This is why a .NET Core compatible Esri AsciiGridParser was created.\\
 
 
 \subsection{NetTopologySuite}
-NTS has the best vector read performance and shares the same RAM based performance benefits as DotSpatial. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core.\\
+NTS has the best vector read performance. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core. The implementation of the Shapefile compatibility is currently missing, but expected to return in September 2017.\\
 
 
 \subsection{AsciiGridParser}
 Since DotSpatial is not ported to .NET Core yet, there is no acceptable solution for reading raster GIS during the simulation. This is, why the author of this work created a parser for Esri's ASCII grid format.\\
-ASCII grid is a text-based, geo-referenced raster format that other raster formats like GeoTIFF can be converted into. Due to the text-based nature of the format the read performance is not as good as the DotSpatial reader. It is however acceptable until DotSpatial gets migrated.
+ASCII grid is a text-based, geo-referenced raster format that other raster formats like GeoTIFF can be converted into. Due to the text-based nature of the format the read performance is not as good as the DotSpatial reader. It is however within the same range and offers very good performance until DotSpatial gets migrated.
 
 
 
 \section{Results}
-The performance measurement for the local libraries (NTS, DotSpatial and the AsciiGridParser) are different to the database solutions. These libraries open the file into RAM and read from it. Reading takes the majority of the time, while reads from RAM is much faster. Since the file can be loaded once and read from during the simulation, the time increase for additional reads is very low, making these solution preferable at scale.\\
-The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. The read times for local libraries is increased by a few seconds, while MongoDB and PostGis take almost 10 times as much time. With agent counts of 5 million the described effect becomes even more extreme, in favor of NTS, DotSpatial and the AsciiGridParser.
+The performance measurement for the local libraries (NTS, DotSpatial and the AsciiGridParser) are different to the database solutions. These libraries open the file into RAM and read from it. The opening takes majority of the time, while reads from RAM is much faster. Since the file can be loaded once and read from during the simulation, the time increase for additional reads is very low, making these solution preferable at scale.\\
+The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. The read times for local libraries is increased by a few milliseconds, while MongoDB and PostGis take almost 10 times as much time. With agent counts of 5 million the described effect becomes even more extreme, in favor of NTS, DotSpatial and the AsciiGridParser.
 
 \begin{figure}[H]
 	\begin{tikzpicture}

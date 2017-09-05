@@ -276,7 +276,7 @@
 %% abstract page
 % Parameter 1: keywords german
 % Parameter 2: abstract german
-% Parameter 3: keywords english
+% Parameter 3: ds english
 % Parameter 4: abstract english
 \newcommand{\HAWAbstractPage}[4]{
   \begingroup
@@ -340,18 +340,19 @@
   \@ifundefined{otherlanguage}{}{\end{otherlanguage}}
 
   \@ifundefined{otherlanguage}{}{\begin{otherlanguage}{english}}
-  {\setlength{\parindent}{0em}\bfseries Title of the paper}\\
+%  {\setlength{\parindent}{0em}\bfseries Title of the paper}\\
   \theHAWThesisEnglishTitle%
   \ifthenelse{\equal{\theHAWThesisEnglishSubTitle}{}}{}{%
     \theHAWSubTitleDelimiter\ \theHAWThesisEnglishSubTitle}
   \medskip
 
-  {\setlength{\parindent}{0em}\bfseries Keywords}\\
-  #3
+%  {\setlength{\parindent}{0em}\bfseries Keywords}\\
+%  #3
   \medskip
+ 
+%  {\setlength{\parindent}{0em}\bfseries Abstract}\\
+%  #4
 
-  {\setlength{\parindent}{0em}\bfseries Abstract}\\
-  #4
   \@ifundefined{otherlanguage}{}{\end{otherlanguage}}
   \endgroup
   \pagebreak
