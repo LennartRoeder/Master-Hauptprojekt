@@ -1,12 +1,13 @@
 % !TeX spellcheck = en_US
 
 \chapter{Introduction}
-MARS LIFE provides a large scale simulation environment for multi-agent simulations. Due to the environmental centered domain, the use of Geographic Information System (GIS) data is essential.\\
-The current implementation for GIS usage inside LIFE is not working since the migration from Mono to .NET Core and while this might change, it has significant performance hazards.
+Geo-spatial data plays a major roll in the processing big data and in the ages of mobile geo-referenced data is becoming increasingly relevant \citep{Lee2015, Kitchin2013, Graham2013}. With growing relevance of such big data, the efficient storage and manipulation is a crucial topic.\\
+MARS LIFE provides a large scale simulation environment for multi-agent simulations. Most models rely on geo-referenced data, making it a natural match for GIS. The possibility to use it as input for simulations is therefor very desirable.\\
+This work focuses on improving the LIFE simulation system by adding layers that allows to take advantage of raster and vector GIS capabilities.
 
 
 
 \section{Motivation}
-The biggest project using MARS is an ecological model of the Krueger National Park (KNP) that tracks elephant and marula tree populations. 
-
-This work analyses the current state and introduces architectural changes to solve this problem of slow GIS reads.
+MARS LIFE used to have capabilities for using GIS. However, they did not meet the requirements in terms of performance and usability. For this reason they were never used in production. With a recent infrastructural change, it has been abandoned due to incompatibilities.\\
+The incapability to use GIS created the necessary for workarounds to use geo-referenced data. While these solutions work, they cover a very narrow use-case tailored to the needs of a specific model. This contradicts the idea of a general purpose simulation system.\\
+For the reasons mentioned above this work focuses on re-instantiating the GIS into MARS LIFE and to meet the requirements in terms of performance and usability. The main focus is, to achieve a performance that can handle agent counts in the millions within a reasonable time.

@@ -1,7 +1,7 @@
 % !TeX spellcheck = en_US
 
 \chapter{Software Design}
-This chapter discusses the possible solutions for working with GIS inside the LIFE simulation system.
+This chapter discusses the current state and possible solutions for working with GIS inside the LIFE simulation system.
 
 
 
@@ -23,7 +23,7 @@ During the import the GDS determines the type of data automatically by checking 
 \subsubsection{GeoServer} \label{sec:GS}
 The GeoServer (GS) is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The api is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
 The Web Feature Service (WFS) allows to retrieve features of vector data, Web Coverage Service (WCS) enables downloading raster data and the Web Map Service (WMS) can generate a tile map for viewing GIS on a map.\\
-The GS is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of  single values in parallel in a short amount of time. The GS does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files. The performance for retrieving data is also very poor which will require a better solution.
+The GS is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of  single values in parallel in a short amount of time. The GS does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files. The performance for retrieving data is also very poor which will require a better solution. \cite{Pandey2016} explains that disk-based systems as GS considerably fall behind in performance, especially in real-time  analysis.
 
 
 \subsection{LIFE -- GIS Layer}
@@ -33,7 +33,16 @@ The current models therefore do not leverage GIS for their input. Data is being 
 
 \section{Solutions}
 As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment.\\
-Different alternative solutions have been discovered and evaluated. Figure \ref{fig:feature_comparison} shows an overview of these technologies.
+Figure \ref{img:spatial-queries} shows that local GIS libraries tend to drastically outperform database solutions. For this reason local libraries were also considered during the evaluation. Hadoop-GIS with MapReduce as suggested by \cite{Wang2011} offers very good scalability but does not support the hight IO and low latency focused use-case of the MARS system. Further methods were suggested by \cite{Pavlo2009}.\\
+Figure \ref{fig:feature_comparison} shows an overview of the technologies which have been considered to be beneficial. The main criteria for choosing these libraries and databases were geo-spatial capabilities, compatibility to .NET Core and performance.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\columnwidth]{res/spatial-queries}\\
+	\caption[]{Processing time on spatial queries by \cite{Witayangkurn2012}}
+	\label{img:spatial-queries}
+\end{figure}
+
 
 \begin{table}[H]
 	\caption{GIS solutions feature comparison}
