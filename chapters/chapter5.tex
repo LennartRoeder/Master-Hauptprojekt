@@ -17,7 +17,7 @@ The most relevant issue is the absents of core functionality. Classes like \enqu
 
 
 \subsection{GIS libraries}
-As mentioned before, compatibility for GIS libraries is not very good. Since they rely heavily on missing core functionality, it is not trivial to migrate them and as a result compatibility to all GIS libraries, known by the author has been broken by .NET Core.\\
+As mentioned before, compatibility for GIS libraries is not very good. Since they rely heavily on missing core functionality, it is not trivial to migrate them and as a result, compatibility to all GIS libraries tested during the project, stopped working with .NET Core.\\
 The only library that has been migrated so far is NetTopologySuite. DotSpatial has not been ported yet and the team did not show any intentions to migrate the code base. This is why the AsciiGrid parser has been created as an alternative (see section \ref{sec:parser}).
 
 
@@ -35,7 +35,7 @@ Since August 2017 the issue for .NET Core 1.1 compatibility has been closed, all
 \subsection{Raster GIS Layer -- AsciiGridParser}
 \label{sec:parser}
 Due to the incompatibility of DotSpatial an alternative solution had to be created to handle raster GIS. With the lack of core libraries that support any kind of image processing supporting GeoTIFF was not worth the effort.\\
-To do so, image processing, as well ass certain image compression mechanism would have had to be implemented. Considering the current design, this effort would have been able to speed up initialization time, but not runtime performance. Therefor the text-based Esri AsciiGrid format hast been chosen.\\
+To do so, image processing, as well as certain image compression mechanism would have had to be implemented. Considering the current design, this effort would have been able to speed up initialization time, but not runtime performance. Therefor the text-based Esri AsciiGrid format hast been chosen.\\
 AsciiGrid has larger file size, but zip compression can dramatically reduce this size. The conversion into a zipped AsciiGrid is done by the GeoServer on export.\\
 The way the parser works is that it opens the data file during the initialization and parses the metadata into local variables and the payload into a multi-dimensional array. This reduces the complex and time consuming portion of the process to a one time operation. Thereafter, reads can be done via index access on the array, which is almost instant, allows millions of reads within milliseconds.\\
 The parser offers methods for a more convenient workflow, as specified in section \ref{sec:requirements}. The easiest way to query the raster file is by X and Y coordinates of the desired pixel. It is however more practical to request based on a GPS position. Additionally it is possible to calculate the distance between pixels and GPS position.\\

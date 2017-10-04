@@ -8,13 +8,13 @@ The goal of this work is to create a layer inside the simulation system MARS LIF
 \section{Use-Cases}
 \begin{usecase}
 	\addtitle{Vector I}{Open Vector file for reading}
-	\addfield{Summary:}{Open Shapefile that was imported prior to the simulation creation.}
+	\addfield{Summary:}{Open a Vector file that was imported prior to the simulation creation.}
 	\additemizedfield{Preconditions:}{
 		\item The vector file was imported and mapped prior to the simulation run.
 		\item The Shapefile is valid (containing at least a .shp, .shx and .dbf file).
 	}
 	\additemizedfield{Primary Scenario:}{
-		\item Initiate a vector GIS layer inside the model from a file and enable agents to access it.
+		\item Initiate a vector GIS layer inside the model from a file and enable agents the underlying Shapefile.
 	}
 	%	\additemizedfield{Alternative Scenario:}{
 	%		\item The user clicks the upload button, browses files of his local machine, fills the form for every file and starts the import.
@@ -66,8 +66,8 @@ The goal of this work is to create a layer inside the simulation system MARS LIF
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Vector V}{Determine overlapping features}
-	\addfield{Summary:}{A function that takes two features as input and returns true if they overlap.
+	\addtitle{Vector V}{Determine if features intersect}
+	\addfield{Summary:}{A function that takes two features as input and returns true if they intersect .
 	}
 	\additemizedfield{Preconditions:}{
 		\item Both features exist and are available to the layer.
@@ -139,7 +139,7 @@ The following requirements were extracted from the use-cases.
 	\item Read all Features from file into a local data structure.
 	\item Read all features at a GPS position.
 	\item Calculate distance between features.
-	\item Determine if features overlap.
+	\item Determine if features Intersect.
 	\item Open raster file.
 	\item Read all pixels from a raster into a local data structure.
 	\item Read a pixel at a specific GPS position.

@@ -6,35 +6,35 @@ This chapter discusses the current state and possible solutions for working with
 
 
 \section{Current state}
-Currently the GIS support inside MARS is partial, some components of the environment are capable of handling GIS, while others are not currently supporting it.
+Currently the GIS support inside MARS is partial, some components of the environment are capable of handling GIS, while others are not supporting it yet.
 
 
-\subsection{Web browser Front-end}
-The WebUI supports GIS for importing and managing this kind of data. It's successor the teaching UI currently does not support GIS. Due to the micro-service structure of the back-end services it is possible for the front-ends to coexist.
+\subsection{WebUI}
+The WebUI supports GIS for importing and managing this kind of data. It's successor the teaching UI currently does not support GIS. Due to the micro-service structure of the back-end services it is possible for the front-ends to coexist until the feature has been implemented.
 
 \subsection{Back-end Services}
 The back-end services fully support GIS. The file service accepts the uploaded files and hands control over to the GIS Data Service (GDS). 
 
 \subsubsection{GIS Data Service}
-The GDS is capable of handling the most common GIS types, these are Geotiff and Esri ASCII grid for raster and Shapefile for vector files. The files may be provided compressed inside a .zip file or as plain files.\\
+The GDS is capable of handling the most common GIS types, these are GeoTIFF, GeoJSON and Esri ASCII Grid for raster and Shapefile for vector files. The files may be provided compressed inside a .zip file or as plain files.\\
 During the import the GDS determines the type of data automatically by checking the file extension. Once detected, the file is validated and the spatial reference is determined. In case of a valid geo-referenced input, the file is imported into the GeoServer for persistence.
 
 
 \subsubsection{GeoServer} \label{sec:GS}
-The GeoServer (GS) is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The api is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
+The GeoServer (GS) is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The API is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
 The Web Feature Service (WFS) allows to retrieve features of vector data, Web Coverage Service (WCS) enables downloading raster data and the Web Map Service (WMS) can generate a tile map for viewing GIS on a map.\\
 The GS is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of  single values in parallel in a short amount of time. The GS does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files. The performance for retrieving data is also very poor which will require a better solution. \cite{Pandey2016} explains that disk-based systems as GS considerably fall behind in performance, especially in real-time  analysis.
 
 
 \subsection{LIFE -- GIS Layer}
-The GIS Layer inside MARS LIFE reads the Data provided by the GDS and uses it inside the simulation. Since the migration from C\# to .NET Core inside LIFE the GIS layer is not compatible anymore.\\
+The GIS Layer inside MARS LIFE reads the data provided by the GDS and uses it inside the simulation. Since the migration from C\# to .NET Core inside LIFE the GIS layer is not compatible anymore.\\
 The current models therefore do not leverage GIS for their input. Data is being transfered into other formats to work around these shortcomings. Vector data is mainly represented as comma separated values (.csv) files and raster data are represented in custom formats.
 
 
 \section{Solutions}
 As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment.\\
 Figure \ref{img:spatial-queries} shows that local GIS libraries tend to drastically outperform database solutions. For this reason local libraries were also considered during the evaluation. Hadoop-GIS with MapReduce as suggested by \cite{Wang2011} offers very good scalability but does not support the hight IO and low latency focused use-case of the MARS system. Further methods were suggested by \cite{Pavlo2009}.\\
-Figure \ref{fig:feature_comparison} shows an overview of the technologies which have been considered to be beneficial. The main criteria for choosing these libraries and databases were geospatial capabilities, compatibility to .NET Core and performance.
+Table \ref{fig:feature_comparison} shows an overview of the technologies which have been considered to be beneficial. The main criteria for choosing these libraries and databases were geospatial capabilities, compatibility to .NET Core and performance.
 
 \begin{figure}[H]
 	\centering
@@ -169,7 +169,7 @@ As of August 25th 2017 the library has not been ported to .NET Core. This is why
 
 
 \subsection{NetTopologySuite}
-NTS has the best vector read performance. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core. The implementation of the Shapefile compatibility is currently missing, but expected to return in September 2017.\\
+NTS has the best vector read performance. It is not available for raster GIS. As of August 2017 NTS is available for .NET Core. The implementation of the Shapefile compatibility is currently missing, but expected to return soon.\\
 
 
 \subsection{AsciiGridParser}
@@ -180,7 +180,7 @@ ASCII grid is a text-based, geo-referenced raster format that other raster forma
 
 \section{Results}
 The performance measurement for the local libraries (NTS, DotSpatial and the AsciiGridParser) are different to the database solutions. These libraries open the file into RAM and read from it. The opening takes majority of the time, while reads from RAM is much faster. Since the file can be loaded once and read from during the simulation, the time increase for additional reads is very low, making these solution preferable at scale.\\
-The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. The read times for local libraries is increased by a few milliseconds, while MongoDB and PostGis take almost 10 times as much time. With agent counts of 5 million the described effect becomes even more extreme, in favor of NTS, DotSpatial and the AsciiGridParser.
+The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. The read times for local libraries is increased by a few milliseconds, while MongoDB and PostGis take almost 10 times as much time. With agent counts in the millions, the described effect becomes even more extreme, in favor of NTS, DotSpatial and the AsciiGridParser.
 
 \begin{figure}[H]
 	\begin{tikzpicture}

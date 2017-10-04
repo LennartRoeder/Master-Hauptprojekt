@@ -40,13 +40,13 @@ The most globally used CRS is the Mercator projection. I was created by Gerardus
 \subsubsection{EPSG:4326 -- WGS 84}
 The most recent version of the Mercator projection is called WGS 84. It improves upon WGS 72 and is an \enquote{European Petroleum Survey Group} (EPSG) standard called EPSG:4326, created by \cite{Decker1986}.\\
 WGS 84 is an ellipsoidal coordinate system that shows the 3D surface of the earth in 2D. The coordinates are longitude and latitude measured in degree. Longitude has the 0° point in Greenwich, England and increases east to a maximum of 180° and west to a minimum of -180°. Latitude has the 0° point at the equator and increases north to a maximum of 90° and south to a minimum of -90.\\
-WGS 84 is used by the Global Positioning System (GPS), GIS enthusiasts, inside the OpenStreetMap (OSM) database, as well as Google Earth.
+WGS 84 is used by the Global Positioning System (GPS), GIS specialists, inside the OpenStreetMap (OSM) database, as well as Google Earth.
 
 \subsubsection{EPSG:3857 -- WGS 84 / Pseudo-Mercator}
 Pseudo-Mercator is a projected version of WGS 84 into a cartesian coordinate system. The EPSG Standard is 3857 (EPSG:3857) by \cite{Grafarend1995}.\\
 The CRS is based on a plane, rather then an ellipse. The zero points is identical to WGS 84 but the coordinates are X and Y measured in meters. The Y coordinate is limited to ±85.06° of the WGS 84 bounds. This results in a square projection with a range of ±20,026,376.39m on both axis, but sacrifices the poles to some extend. The square shape allow the creation of tile pyramids, also called \enquote{Mercator Pyramids}. \\
-A pyramid is created, by cutting images of fixed size, usually 256px in width and height. Starting at one tile on the first zoom level, the amount of tiles is multiplied by four on every additional zoom level, to a maximum of around 18. \\
-The resulting small images are ideally to be loaded on demand by a web browser. This is, why all major map sites, like OSM, Google Maps and Bing Maps use Pseudo-Mercator as their CRS. Figure \ref{img:mercator-pyramid} shows such a tile pyramid.
+A pyramid is created, by cutting images of fixed size, usually 256px in width and height. Starting at one tile on the first zoom level, the amount of tiles is multiplied by four on every additional zoom level, to a maximum of around 18, depending on the implementation. \\
+The resulting small images are optimal to be loaded on demand by a web browser. This is, why all major map sites, like OSM, Google Maps and Bing Maps use Pseudo-Mercator as their CRS. Figure \ref{img:mercator-pyramid} shows an example of a Mercator pyramid.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.4\columnwidth]{res/mercator-pyramid}\\
