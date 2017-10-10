@@ -40,6 +40,7 @@
 \usepackage{enumitem}
 \usepackage{pgfplots}
 \usepackage{siunitx}
+\usepackage{lscape}
 
 % Initializing the functional requirements
 \newcommand{\reqinitF}{
@@ -197,25 +198,23 @@
 	\reqinitNF
 
 	\input{chapters/chapter1} % Introduction
-	\input{chapters/chapter2} % Groundwork
+	\input{chapters/chapter2} % Basics
 	\input{chapters/chapter3} % Analysis
 	\input{chapters/chapter4} % Software Design
 	\input{chapters/chapter5} % Implementation
 	\input{chapters/chapter6} % End
 	
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% appendix if used
-	%%\appendix
-	%\typeout{===== File: appendix}
-	%\include{appendix}
+	\appendix
+	\typeout{===== File: appendix}
+	\input{chapters/appendix}
 	
 	% bibliography and other stuff
 	\backmatter
 	
 	\typeout{===== Section: literature}
 	%% read the documentation for customizing the style
-	\bibliographystyle{apa}
+	\bibliographystyle{dinat}
 	\bibliography{hauptprojekt}
 	
 	\typeout{===== Section: nomenclature}

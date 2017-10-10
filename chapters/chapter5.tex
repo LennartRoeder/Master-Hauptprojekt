@@ -47,17 +47,18 @@ To demonstrate the capabilities of the created GIS Vector layer, it was integrat
 The park is surrounded by a fence that is supposed to keep elephants from leaving the national park. However, in times of desperate need, the elephants are able to break through the fence.\\
 
 
-\subsection{Obstacle Layer Implementation}
+\subsection{Obstacle Layer Replacement}
+
+\subsubsection{Old Implementation}
 The old implementation uses a special obstacle layer that just has the purpose to model this kind of behavior. The original Shapefile polygon representing the fence has to be rasterized. The raster is then converted to a custom comma-separated file that represented all columns and lines of the raster image. Each field has either a value of 0 or the strength of the fence at a specific position.\\
 The obstacle approach requires extensive preparation and a specialized layer type inside LIFE. The result has the advantage that a preinitialized file is very good in terms of performance.\\
 On the other hand, it is not very accurate. The size of a cells was set to a one kilometer by one kilometer, which effectively makes the fence 1km thick at any point. The file size of the obstacle input file that had to be uploaded into the MARS cloud was 8.1 MB compared to 38 KB for the original Shapefile.
 
-
-\subsection{GIS Layer Implementation}
-The GIS layer is a generic implementation that allows the usage of vector files. To make the obstacle detection work, a data table with a  column named "resistance" and one line, containing the value has to be added. The field holds the strength of the fence.\\
+\subsubsection{GIS  Implementation}
+The GIS layer is a generic implementation that allows the usage of vector files. To make the obstacle detection work, a data table with a column named "resistance" and one line, containing the value has to be added. The field holds the strength of the fence.\\
 During the elephant movement, it simply requests the accumulated path rating of the desired path. The GIS layer checks if the path intersects with a feature of the GIS file. If this is the case, it reads the resistance value of the feature's data table and adds these value up for every intersection.\\
-Eg. no intersection with a fence of strength 19,000 would return 0, one intersection 19,000, two results in 38,000 and so on.\\
-The generic nature of the GIS layer enables the model developer to encode any type of table data. E.g. it would be possible to use a Shapefile with polygons that contain water wholes. If an elephant is within a certain distance, it could sense the water and move towards it. This mimics the functionality currently provided by the potential-field layer, that has similar constrains compared to the obstacle layer.
+E.g. no intersection with a fence of strength 19,000 would return 0, one intersection 19,000, two results in 38,000 and so on.\\
 
 
-
+\subsection{Other possible Use-Cases}
+The generic nature of the GIS layer enables the model developer to encode any type of table data. E.g. it would be possible to use a Shapefile with polygons that contain water holes. If an elephant is within a certain distance, it could sense the water and move towards it. This mimics the functionality currently provided by the potential-field layer, that has similar constrains compared to the obstacle layer.

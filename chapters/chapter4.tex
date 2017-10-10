@@ -23,8 +23,15 @@ During the import the GDS determines the type of data automatically by checking 
 \subsubsection{GeoServer} \label{sec:GS}
 The GeoServer (GS) is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The API is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
 The Web Feature Service (WFS) allows to retrieve features of vector data, Web Coverage Service (WCS) enables downloading raster data and the Web Map Service (WMS) can generate a tile map for viewing GIS on a map.\\
-The GS is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of  single values in parallel in a short amount of time. The GS does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files. The performance for retrieving data is also very poor which will require a better solution. \cite{Pandey2016} explains that disk-based systems as GS considerably fall behind in performance, especially in real-time  analysis.
+The GS is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of single values in parallel in a short amount of time. The GS does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files and the performance for retrieving data is very poor which will require a better solution.\\
+figure \ref{img:gs-read-performance} emphasizes this. It shows GS response time for different storage solutions. All values exceed one second which is not expectable for the amount of requests needed for this work. \cite{Pandey2016} argues that disk-based systems are generally not fast enough for real-time analysis.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\columnwidth]{res/gs-read-performance}\\
+	\caption[]{GeoServer average time of response by \cite{ruuvzivcka2016comparing}}
+	\label{img:gs-read-performance}
+\end{figure}
 
 \subsection{LIFE -- GIS Layer}
 The GIS Layer inside MARS LIFE reads the data provided by the GDS and uses it inside the simulation. Since the migration from C\# to .NET Core inside LIFE the GIS layer is not compatible anymore.\\
@@ -32,17 +39,16 @@ The current models therefore do not leverage GIS for their input. Data is being 
 
 
 \section{Solutions}
-As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment.\\
-Figure \ref{img:spatial-queries} shows that local GIS libraries tend to drastically outperform database solutions. For this reason local libraries were also considered during the evaluation. Hadoop-GIS with MapReduce as suggested by \cite{Wang2011} offers very good scalability but does not support the hight IO and low latency focused use-case of the MARS system. Further methods were suggested by \cite{Pavlo2009}.\\
+As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment. Figure \ref{img:spatial-queries} shows that local GIS libraries tend to drastically outperform database solutions. For this reason local libraries were also considered during the evaluation.\\
+Hadoop-GIS with MapReduce as suggested by \cite{Wang2011} offers very good scalability but does not support the hight IO and low latency focused use-case of the MARS system.  GeoMesa and Vector Cluster as suggested by \cite{Toups2016} was not taken into closer consideration, since PostGIS offered a better performance. Vertica and DBMS-X as proposed by \cite{Pavlo2009} were ruled out du to lack of promising performance. \\
 Table \ref{fig:feature_comparison} shows an overview of the technologies which have been considered to be beneficial. The main criteria for choosing these libraries and databases were geospatial capabilities, compatibility to .NET Core and performance.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\columnwidth]{res/spatial-queries}\\
+	\includegraphics[width=0.6\columnwidth]{res/spatial-queries}\\
 	\caption[]{Processing time on spatial queries by \cite{Witayangkurn2012}}
 	\label{img:spatial-queries}
 \end{figure}
-
 
 \begin{table}[H]
 	\caption{GIS solutions feature comparison}
@@ -160,8 +166,15 @@ The big raster file was even worse. The test crashed with an OutOfMemory excepti
 
 
 \subsection{MongoDB}
-MongoDB offeres good overall performance for vector data. The file size does not effect the overall performance by a large extend. For the medium and large file it was even faster than NetTopologySuite (NTS). Raster GIS is not supported.
+MongoDB offeres good overall performance for vector data. The file size does not effect the overall performance by a large extend. For the medium and large file it was even faster than NetTopologySuite (NTS). Raster GIS is not supported.\\
+Figure \ref{img:mongo-vs-postgres} shows the performance of MongoDB compared to PostgreSQL for vector GIS.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\columnwidth]{res/mongo-vs-postgres}\\
+	\caption[]{Comparison of the times of the read of the evaluation data in the Database PostgreSQL and MongoDB by \cite{Maia2016}}
+	\label{img:mongo-vs-postgres}
+\end{figure}
 
 \subsection{DotSpatial}
 DotSpatial offers average vector read performance. MongoDB and NTS perform slightly better. Since both these technologies are not available for raster GIS, DotSpatial performs best in that field.\\
