@@ -1,14 +1,14 @@
 % !TeX spellcheck = en_US
 
 \chapter{Introduction}
-Geospatial data plays a major roll in the processing big data and in the age of mobile geo-referenced data is becoming increasingly relevant \citep{Lee2015, Kitchin2013, Graham2013}. With growing relevance of such big data, the efficient storage and manipulation is a crucial topic.\\
+Geospatial data plays a major roll in the processing big data and in the age of mobile geo-referenced data is becoming increasingly relevant \citep{Lee2015, Kitchin2013, Graham2013}. With growing relevance, the efficient storage and manipulation of such data is a crucial topic.\\
 MARS LIFE provides a large scale simulation environment for multi-agent simulations. Most models rely on geo-referenced data, making it a natural match for GIS. The possibility to use it as input for simulations is therefor very desirable.\\
 This work focuses on improving the LIFE simulation system by adding layers that allows to take advantage of raster and vector GIS capabilities.
 
 
 
 \section{Motivation}
-MARS LIFE used to have capabilities for using GIS. However, they did not meet the requirements in terms of performance and usability. For this reason they were never used in production. With a recent infrastructural change, it has been abandoned due to incompatibilities.\\
-The incapability to use GIS created the necessary for workarounds to use geo-referenced data. While these solutions work, they cover a very narrow use-case tailored to the needs of a specific model. This contradicts the idea of a general purpose simulation system.\\
+MARS LIFE used to have GIS capabilities, they however did not meet the requirements in terms of performance and usability. For this reason it were never used in production. Recent infrastructural change made the GIS integration incompatible and therefor unable to be used.\\
+The incapability to use GIS created the necessary for workarounds for the use of geo-referenced data. While these solutions work, they cover a very narrow use-case, tailored to the needs of a specific model. This contradicts the idea of a general purpose simulation system.\\
 For the reasons mentioned above this work focuses on re-instantiating GIS support into MARS LIFE. This is done with the latest requirements for usability and performance in mind. The main focus is, to achieve a performance that can handle agent counts in the millions within a reasonable time.\\
-To demonstrate the capabilities of this layers, they will be integrated into the simulation platform. The main model will then use it for it's obstacle detection during agent movement.
+To demonstrate the capabilities of this layers, they will be integrated into the simulation platform. Obstacle detection is a common GIS use-case \cite{Wang2016}. To showcase this work, it will be integrated into the most relevant model for it's obstacle detection during agent movement.
