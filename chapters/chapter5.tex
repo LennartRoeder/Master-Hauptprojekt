@@ -22,7 +22,7 @@ The only library that has been migrated so far is NetTopologySuite. DotSpatial h
 
 
 
-\section{Integration into LIFE}
+\section{Integration into MARS LIFE}
 The solutions for raster and vector GIS work quite different, as a result two separate layers have been created.
 
 
@@ -35,7 +35,7 @@ Since August 2017 the issue for .NET Core 1.1 compatibility has been closed, all
 \subsection{Raster GIS Layer -- AsciiGridParser}
 \label{sec:parser}
 Due to the incompatibility of DotSpatial an alternative solution had to be created to handle raster GIS. With the lack of core libraries that support any kind of image processing supporting GeoTIFF was not worth the effort.\\
-To do so, image processing, as well as certain image compression mechanism would have had to be implemented. Considering the current design, this effort would have been able to speed up initialization time, but not runtime performance. Therefor the text-based Esri AsciiGrid format hast been chosen.\\
+To do so, image processing, as well as certain image compression mechanism would have had to be implemented. Considering the current design, this effort would have been able to speed up initialization time, but not runtime performance. Therefor the text-based Esri AsciiGrid format has been created.\\
 AsciiGrid has larger file size, but zip compression can dramatically reduce this size. The conversion into a zipped AsciiGrid is done by the GeoServer on export.\\
 The way the parser works is that it opens the data file during the initialization and parses the metadata into local variables and the payload into a multi-dimensional array. This reduces the complex and time consuming portion of the process to a one time operation. Thereafter, reads can be done via index access on the array, which is almost instant, allows millions of reads within milliseconds.\\
 The parser offers methods for a more convenient workflow, as specified in section \ref{sec:requirements}. The easiest way to query the raster file is by X and Y coordinates of the desired pixel. It is however more practical to request based on a GPS position. Additionally it is possible to calculate the distance between pixels and GPS position.\\
@@ -52,10 +52,10 @@ The park is surrounded by a fence that is supposed to keep elephants from leavin
 \subsubsection{Old Implementation}
 The old implementation uses a special obstacle layer that just has the purpose to model this kind of behavior. The original Shapefile polygon representing the fence has to be rasterized. The raster is then converted to a custom comma-separated file that represented all columns and lines of the raster image. Each field has either a value of 0 or the strength of the fence at a specific position.\\
 The obstacle approach requires extensive preparation and a specialized layer type inside LIFE. The result has the advantage that a preinitialized file is very good in terms of performance.\\
-On the other hand, it is not very accurate. The size of a cells was set to a one kilometer by one kilometer, which effectively makes the fence 1km thick at any point. The file size of the obstacle input file that had to be uploaded into the MARS cloud was 8.1 MB compared to 38 KB for the original Shapefile.
+On the other hand, it is not very accurate. The size of a cells was set to a one kilometer by one kilometer, which effectively makes the fence at least 1km thick at any point. The file size of the obstacle input file that had to be uploaded into the MARS cloud was 8.1 MB compared to 38 KB for the original Shapefile.
 
 \subsubsection{GIS  Implementation}
-The GIS layer is a generic implementation that allows the usage of vector files. To make the obstacle detection work, a data table with a column named "resistance" and one line, containing the value has to be added. The field holds the strength of the fence.\\
+The GIS layer is a generic implementation that allows the usage of vector files. To make the obstacle detection work, a data table with a column named "resistance" and one line, containing the value had to be added. The field holds the strength of the fence.\\
 During the elephant movement, it simply requests the accumulated path rating of the desired path. The GIS layer checks if the path intersects with a feature of the GIS file. If this is the case, it reads the resistance value of the feature's data table and adds these value up for every intersection.\\
 E.g. no intersection with a fence of strength 19,000 would return 0, one intersection 19,000, two results in 38,000 and so on.\\
 
