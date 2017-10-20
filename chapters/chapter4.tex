@@ -21,10 +21,10 @@ During the import the GDS determines the type of data automatically by checking 
 
 
 \subsubsection{GeoServer} \label{sec:GS}
-The GeoServer (GS) is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The API is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
+The GeoServer is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The API is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
 The Web Feature Service (WFS) allows to retrieve features of vector data, Web Coverage Service (WCS) enables downloading raster data and the Web Map Service (WMS) can generate a tile map for viewing GIS on a map.\\
-The GS is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of single values in parallel in a short amount of time. The GS does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files and the performance for retrieving data is very poor which will require a better solution.\\
-figure \ref{img:gs-read-performance} emphasizes this. It shows GS response time for different storage solutions. All values exceed one second which is not expectable for the amount of requests needed for this work. \cite{Pandey2016} argues that disk-based systems are generally not fast enough for real-time analysis.
+The GeoServer is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of single values in parallel in a short amount of time. The GeoServer does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files and the performance for retrieving data is very poor which will require a better solution.\\
+figure \ref{img:gs-read-performance} emphasizes this. It shows GeoServer response time for different storage solutions. All values exceed one second which is not expectable for the amount of requests needed for this work. \cite{Pandey2016} argues that disk-based systems are generally not fast enough for real-time analysis.
 
 \begin{figure}[H]
 	\centering
@@ -39,7 +39,7 @@ The current models therefore do not leverage GIS for their input. Data is being 
 
 
 \section{Solutions}
-As mentioned in section \ref{sec:GS} reading data from the GS during the simulation is not feasible inside a high performance environment. Figure \ref{img:spatial-queries} shows that local GIS libraries tend to drastically outperform database solutions. For this reason local libraries were also considered during the evaluation.\\
+As mentioned in section \ref{sec:GS} reading data from the GeoServer during the simulation is not feasible inside a high performance environment. Figure \ref{img:spatial-queries} shows that local GIS libraries tend to drastically outperform database solutions. For this reason local libraries were also considered during the evaluation.\\
 Hadoop-GIS with MapReduce as suggested by \cite{Wang2011} offers very good scalability but does not support the hight IO and low latency focused use-case of the MARS system.  GeoMesa and Vector Cluster as suggested by \cite{Toups2016} was not taken into closer consideration, since PostGIS offered a better performance. Vertica and DBMS-X as proposed by \cite{Pavlo2009} were ruled out du to lack of promising performance. \\
 Table \ref{fig:feature_comparison} shows an overview of the technologies which have been considered to be beneficial. The main criteria for choosing these libraries and databases were geospatial capabilities, compatibility to .NET Core and performance.
 
@@ -160,8 +160,8 @@ The results are listed in figure \ref{fig:vector_performace} for vector and \ref
 
 
 \subsection{PostGIS}
-PostGIS is a PostgreSQL with GIS extensions. It supports storing vector data as well as raster data.\\
-The performance is way better than the of the GS, however PostGIS did not handle the large file very well. The reading of the large vector file took over 10 times longer than the smaller file, which is surprising since the data is broken into tables. A larger table should not effect the response time by that extend.\\
+PostGIS is a PostgreSQL database with GIS extensions. It supports storing vector data as well as raster data.\\
+The performance is way better than the of the GeoServer, however PostGIS did not handle the large file very well. The reading of the large vector file took over 10 times longer than the smaller file, which is surprising since the data is broken into tables. A larger table should not effect the response time by that extend.\\
 The big raster file was even worse. The test crashed with an OutOfMemory exception on a machine with 16 GB of RAM. Limiting the parallelism of threads to 7 worked, but the results of around ~340,000 ms (5 min. 40 sec.) were not acceptable.
 
 
