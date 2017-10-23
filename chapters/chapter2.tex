@@ -1,24 +1,11 @@
 % !TeX spellcheck = en_US
 
+% GIS Grundlagen
+% GIS Libs & Software
+% Datenbanken
+% MARS Architektur + Rahmenbedingungen
 \chapter{Basics}
-This chapter elaborates on the base technologies necessary to understand the following chapters.
-
-
-
-\section{MARS}
-MARS (Multi-Agent Research and Simulation) is a working group at the HAW (University of applied Sciences) in Hamburg, Germany. The research group develops an distributed agent-based simulation system to be used by domain experts around the world. It consists of several components.
-
-
-\subsection{LIFE}
-The simulation system is called MARS LIFE. It executes simulation runs created inside the Cloud Services. For more detail see \cite{Huning2016}.
-
-
-%\subsection{Cloud Services}
-%The Cloud Services are the central back-end of the MARS system. These components are responsible for data import, persistence, data visualization an the connection between LIFE and the WebUI.
-%
-%
-%\subsection{WebUI}
-%The WebUI is the front-end of MARS. It is a web-based application that allows the user to control back-end services and trigger simulations from the web-browser.
+This chapter elaborates on the fundamental concepts and technologies necessary to understand the following chapters. They consist of a general overview of Geographic Information Systems, the mentioned geospatial libraries and databases, as well as the MARS Eco-System and it's circumstances
 
 
 
@@ -61,27 +48,60 @@ This fragmentation of a big dataset is optimal to be loaded on demand and cached
 Geo-spatial data exist in two different types, vector and raster. 
 
 \subsubsection{Raster Data}
- Raster data consists of a grid in fixed size. Depending on the file, each pixel contains a color (e.g. satellite data)  or a grayscale (e.g. elevation maps) value. \\
+ Raster data consists of a grid in fixed size. Depending on the file, each pixel contains a color (e.g. satellite data)  or a grayscale (e.g. elevation maps) value.\\
  The advantage of raster data is that it is better suited to store picture like data with gradients. Due to its nature, raster has data in every cell, which leads into a high amount of data that has to be stored, so the potential file size if big.\\
- Since the raster size is fixed, the balance between desired detail and small file size has to be decided upon file creation. Figure \ref{img:raster} shows a shape in three different raster resolutions, visualizing the loss of detail on lower raster resolutions.
+ Since the raster size is fixed, the balance between desired detail and small file size has to be decided upon file creation. Figure \ref{img:raster} shows a shape in three different rasterized resolutions, visualizing the loss of detail.
  \begin{figure}[H]
  	\centering\includegraphics[width=.5\textwidth]{res/Vector-Raster}
  	\caption{Shape as raster in different resolutions. \url{http://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/what-is-raster-data.htm}}
  	\label{img:raster}
  \end{figure}
+Common file types for raster data are GeoTIFF, ESRI, ESRI ArcGrid and ASCIIGrid. GeoTIFF and ArcGrid are binary file types and ASCIIGrid is text-based.
 
 \subsubsection{Vector Data}
 In contrary to raster data, vectors files don't map color information to a specific pixel, but define mathematical shapes which are rendered as desired. This allows very efficient storage and it is possible to scale the shapes as desired.\\
-Data inside vector GIS can have several layers. Each layer can be of the type points, line or polygon. The data on a layer is called a feature. A point feature has a single coordinate, like a well. lines are open polygon lines and are often used for rivers. Shapes are closed lines and are used for areas like countries, lakes, or larger objects. Figure \ref{img:vector} shows a vector file with 3 layers. The point layer shows the position of wells, the linestring layer shows a river and the polygon layer a lake. \\
-\begin{figure}[H]
+Data inside vector GIS can have several layers. Each layer can be of the type points, line or polygon. The data on a layer is called a feature. A point feature has a single coordinate, like a well. lines are open polygon lines and are often used for rivers. Shapes are closed lines and are used for areas like countries, lakes, or larger objects. Figure \ref{img:vector} shows a vector file with 3 layers. The point layer shows the position of wells, the linestring layer shows a river and the polygon layer a lake.\\
+\begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.4\columnwidth]{res/vector-map}\\
 	\caption[]{Vector map with point, line and polygon. \url{https://commons.wikimedia.org/w/index.php?curid=3024482}}
 	\label{img:vector}
 \end{figure}
 
-Vector GIS is however limited in its capabilities. The mathematical functions mentioned above are not well suited for data without discrete values. Anything that has gradients is better suited for raster.
+Vector GIS is however limited in its capabilities. The mathematical functions mentioned above are not well suited for data without discrete values. Anything that has gradients is better suited for raster.\\
+The most common vector file formats are ESRI Shapefile as binary and GeoJSON as a text-based format.
 
+
+
+\section{GIS Technologies}
+Chapter \ref{sec:software_design} and \ref{sec:implementation} discuss technologies that were considered at one point of this work. The following section introduces them briefly.
+
+
+% Performance tests hier???
+\subsection{Spatial Databases}
+Spatial databases are DBs that have been extended to store and query spatial data types.
+
+\subsubsection{PostGIS}
+PostGIS \citep{Obe2011} is an extended PostgreSQL that allows to store and query both raster and vector GIS.
+
+\subsection{Spatial Libraries}
+
+
+
+\section{MARS}
+MARS (Multi-Agent Research and Simulation) is a working group at the HAW (University of applied Sciences) in Hamburg, Germany. The research group develops an distributed agent-based simulation system to be used by domain experts around the world. It consists of several components.
+
+
+\subsection{LIFE}
+The simulation system is called MARS LIFE. It executes simulation runs created inside the Cloud Services. For more detail see \cite{Huning2016}.
+
+
+%\subsection{Cloud Services}
+%The Cloud Services are the central back-end of the MARS system. These components are responsible for data import, persistence, data visualization an the connection between LIFE and the WebUI.
+%
+%
+%\subsection{WebUI}
+%The WebUI is the front-end of MARS. It is a web-based application that allows the user to control back-end services and trigger simulations from the web-browser.
 
 
 %\section{Mono}
