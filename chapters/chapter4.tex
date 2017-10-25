@@ -24,18 +24,18 @@ The GDS is capable of handling the most common GIS types, these are GeoTIFF, Geo
 During the import the GDS determines the type of data automatically by checking the file extension. Once detected, the file is validated and the spatial reference is determined. In case of a valid geo-referenced input, the file is imported into the GeoServer for persistence.
 
 
-\subsubsection{GeoServer} \label{sec:GS}
-The GeoServer is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The API is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
-The Web Feature Service (WFS) allows to retrieve features of vector data, Web Coverage Service (WCS) enables downloading raster data and the Web Map Service (WMS) can generate a tile map for viewing GIS on a map.\\
-The GeoServer is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of single values in parallel in a short amount of time. The GeoServer does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files and the performance for retrieving data is very poor which will require a better solution.\\
-figure \ref{img:gs-read-performance} emphasizes this. It shows GeoServer response time for different storage solutions. All values exceed one second which is not expectable for the amount of requests needed for this work. \cite{Pandey2016} argues that disk-based systems are generally not fast enough for real-time analysis.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\columnwidth]{res/gs-read-performance}\\
-	\caption[]{GeoServer average time of response by \cite{ruuvzivcka2016comparing}}
-	\label{img:gs-read-performance}
-\end{figure}
+%\subsubsection{GeoServer} \label{sec:GS}
+%The GeoServer is an open source software that is tailored to store, manage and share GIS. It offers a web GUI as well as a REST API for interaction. The API is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
+%The Web Feature Service (WFS) allows to retrieve features of vector data, Web Coverage Service (WCS) enables downloading raster data and the Web Map Service (WMS) can generate a tile map for viewing GIS on a map.\\
+%The GeoServer is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of single values in parallel in a short amount of time. The GeoServer does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files and the performance for retrieving data is very poor which will require a better solution.\\
+%figure \ref{img:gs-read-performance} emphasizes this. It shows GeoServer response time for different storage solutions. All values exceed one second which is not expectable for the amount of requests needed for this work. \cite{Pandey2016} argues that disk-based systems are generally not fast enough for real-time analysis.
+%
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.8\columnwidth]{res/gs-read-performance}\\
+%	\caption[]{GeoServer average time of response by \cite{ruuvzivcka2016comparing}}
+%	\label{img:gs-read-performance}
+%\end{figure}
 
 \subsection{LIFE -- GIS Layer}
 The GIS Layer inside MARS LIFE reads the data provided by the GDS and uses it inside the simulation. Since the migration from C\# to .NET Core inside LIFE the GIS layer is not compatible anymore.\\
@@ -54,21 +54,21 @@ Table \ref{fig:feature_comparison} shows an overview of the technologies which h
 	\label{img:spatial-queries}
 \end{figure}
 
-\begin{table}[H]
-	\caption{GIS solutions feature comparison}
-	\label{fig:feature_comparison}
-	\begin{tabular}{|l|l|l|l|}
-	\hline \textbf{Name}	& \textbf{Raster support} & \textbf{Vector support} & \textbf{Type}\\
-	\hline GeoServer & Yes & Yes & Self-hosted product\\
-	\hline PostGIS	& Yes* & Yes & PostgreSQL DB + GIS ext.\\
-	\hline MongoDB	& No & Yes & DB with spatial capabilities\\
-	\hline Dotspatial & Yes & Yes & C\# library\\
-	\hline NetTopologySuite	& No & Yes & C\# library\\
-	\hline AsciiGridParser & Yes & No & Own .NET Core Component\\
-	\hline
-	\end{tabular}
-	\caption*{ \raggedright * Large file failed.}
-\end{table}
+%\begin{table}[H]
+%	\caption{GIS solutions feature comparison}
+%	\label{fig:feature_comparison}
+%	\begin{tabular}{|l|l|l|l|}
+%	\hline \textbf{Name}	& \textbf{Raster support} & \textbf{Vector support} & \textbf{Type}\\
+%	\hline GeoServer & Yes & Yes & Self-hosted product\\
+%	\hline PostGIS	& Yes* & Yes & PostgreSQL DB + GIS ext.\\
+%	\hline MongoDB	& No & Yes & DB with spatial capabilities\\
+%	\hline Dotspatial & Yes & Yes & C\# library\\
+%	\hline NetTopologySuite	& No & Yes & C\# library\\
+%	\hline AsciiGridParser & Yes & No & Own .NET Core Component\\
+%	\hline
+%	\end{tabular}
+%	\caption*{ \raggedright * Large file failed.}
+%\end{table}
 
 All mentioned technologies were performance tested with the same input files. A small, medium and a large size vector and raster file. The sizes were 10 KB, 6.5 MB and 105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate tests. 
 The results are listed in figure \ref{fig:vector_performace} for vector and \ref{fig:raster_performace} for raster inputs.

@@ -60,32 +60,81 @@ Common file types for raster data are GeoTIFF, ESRI, ESRI ArcGrid and ASCIIGrid.
 
 \subsubsection{Vector Data}
 In contrary to raster data, vectors files don't map color information to a specific pixel, but define mathematical shapes which are rendered as desired. This allows very efficient storage and it is possible to scale the shapes as desired.\\
-Data inside vector GIS can have several layers. Each layer can be of the type points, line or polygon. The data on a layer is called a feature. A point feature has a single coordinate, like a well. lines are open polygon lines and are often used for rivers. Shapes are closed lines and are used for areas like countries, lakes, or larger objects. Figure \ref{img:vector} shows a vector file with 3 layers. The point layer shows the position of wells, the linestring layer shows a river and the polygon layer a lake.\\
-\begin{figure}[H] 
+Data inside vector GIS can have several layers. Each layer has the type points, line or polygon. The data on a layer is called a feature and matches the layer type. A point feature has a single coordinate (e.g. a well in the ground). Lines are open polygon lines and are used for shapes like walls, streets or rivers. Polygons are closed lines and are used for areas, such as countries, lakes, or larger objects. Figure \ref{img:vector} shows a vector file with the mentioned 3 layers types. The point layer shows the position of wells, the line layer shows a river and the polygon layer a lake.\\
+While vector files have the advantage of efficient storage, they have the disadvantage of not being universally usable. The mathematical functions in which data is represented, are not well suited for data without discrete values. Anything that has gradients is better suited for raster.\\
+The most common vector file formats are ESRI Shapefile as binary and GeoJSON as a text-based format.
+
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.4\columnwidth]{res/vector-map}\\
 	\caption[]{Vector map with point, line and polygon. \url{https://commons.wikimedia.org/w/index.php?curid=3024482}}
 	\label{img:vector}
 \end{figure}
 
-Vector GIS is however limited in its capabilities. The mathematical functions mentioned above are not well suited for data without discrete values. Anything that has gradients is better suited for raster.\\
-The most common vector file formats are ESRI Shapefile as binary and GeoJSON as a text-based format.
-
 
 
 \section{GIS Technologies}
-Chapter \ref{sec:software_design} and \ref{sec:implementation} discuss technologies that were considered at one point of this work. The following section introduces them briefly.
+Chapters \ref{sec:software_design} and \ref{sec:implementation} discuss technologies that were considered at one point of this work. \ref{fig:feature_comparison} shows an overview of the technologies, which will be introduced in this section.
+
+\begin{table}[H]
+	\caption{GIS solutions feature comparison}
+	\label{fig:feature_comparison}
+	\begin{tabular}{|l|l|l|l|}
+		\hline \textbf{Name}	& \textbf{Raster support} & \textbf{Vector support} & \textbf{Type}\\
+
+		\hline PostGIS	& Yes* & Yes & PostgreSQL DB + GIS ext.\\
+		\hline MongoDB	& No & Yes & NoSQL DB with spatial capabilities\\
+		\hline Dotspatial & Yes & Yes & C\# library\\
+		\hline NetTopologySuite	& No & Yes & C\# library\\
+		\hline GeoServer & Yes & Yes & Self-hosted product\\
+		\hline GDAL & Yes & Yes & Library for geospatial manipulation\\
+		\hline
+	\end{tabular}
+	\caption*{ \raggedright * Large file failed.}
+\end{table}
 
 
-% Performance tests hier???
 \subsection{Spatial Databases}
 Spatial databases are DBs that have been extended to store and query spatial data types.
 
 \subsubsection{PostGIS}
-PostGIS \citep{Obe2011} is an extended PostgreSQL that allows to store and query both raster and vector GIS.
+PostGIS \citep{Obe2011} is an extender to the object-relational database PostgreSQL \citep{Momjian2001} that allows to store and query both raster and vector GIS through SQL.\\
+It supports numerous file types for both raster and vector data. The import process is done with specific tools that come as command-line applications which are bundled with the PostGIS installation. The geometry type allows spatial queries regarding certain areas. These allow to extract single pixel values from raster files as well as feature extraction from vector files. A full list of features can be found at \url{http://postgis.net/features/}.
 
-\subsection{Spatial Libraries}
+\subsubsection{MongoDB}
+MongoDB is a document-based database (NoSQL database). As of version 3.4.9 MongoDB supports only vector GIS. It does not support a wide range of format types, but only GeoJSON \citep{Butler2016}. However, it is quite easy to convert the common vector files to GeoJSON using GDAL (see \ref{sec:gdal} for more details).
 
+
+\subsection{C\# Libraries}
+The following C\# libraries were covered in the design phase due to their .Net Core compatibility.
+
+\subsubsection{DotSpatial}
+DotSpatial is a GIS library for .Net Framework that allows reading and writing of both raster and vector data. Besides it's manipulation capabilities, it offers functionality for map visualization that allows displaying data. Unfortunately the library has not been ported to .Net Core yet.
+
+\subsubsection{NetTopologySuite (NTS)}
+NetTopologySuite is a C\# reimplementation of the JTS Topology Suite (formerly known as "Java Topology Suite"). It is a library for geospatial vector data manipulation. Raster data handling is not supported. The Library has been migrated to support .NET Core in the fall of 2017.
+
+
+\subsection{Others}
+The following technologies did not fit the previous categories. The GeoServer stores and manages GIS yet is not database itself and GDAL is a GIS library which is used as standalone software.
+
+\subsubsection{GeoServer} \label{sec:GS}
+The GeoServer is an open source software that is tailored to store, manage and share GIS. It offers a web UI as well as a REST API for interaction. The API is structured in a way that it implements common Open Geospatial Consortium (OGC) standards for retrieving data.\\
+The Web Feature Service (WFS) allows to retrieve features of vector data, Web Coverage Service (WCS) enables downloading raster data and the Web Map Service (WMS) can generate a tile map for viewing GIS on a map.
+%\\The GeoServer is build for working with few files and a small number of users. The MARS use-case requires to read thousands to millions of single values in parallel in a short amount of time. The GeoServer does not satisfy this demands. The retrieval of single values is not supported, since the general use-case is to work with complete files and the performance for retrieving data is very poor which will require a better solution.\\
+%figure \ref{img:gs-read-performance} emphasizes this. It shows GeoServer response time for different storage solutions. All values exceed one second which is not expectable for the amount of requests needed for this work. \cite{Pandey2016} argues that disk-based systems are generally not fast enough for real-time analysis.
+%
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.8\columnwidth]{res/gs-read-performance}\\
+%	\caption[]{GeoServer average time of response by \cite{ruuvzivcka2016comparing}}
+%	\label{img:gs-read-performance}
+%\end{figure}
+
+\subsubsection{Geospatial Data Abstraction Library (GDAL)}
+\label{sec:gdal}
+GDAL is a GIS library that is capable of reading and converting various data formats. It current version (2.2.2) supports 142 different raster and 84 vector formats. The library is distributed as a combination of various command-line tools that are each tailored at a specific task. E.g. gdal\_translate converts files between different formates.\\
+The gdal tools work with raster data and the ogr tools work with vector data. Ogr stands for \enquote{OpenGIS Simple Features Reference Implementation}.
 
 
 \section{MARS}
