@@ -4,131 +4,138 @@
 % muss schnell sein
 % GIS Layer (Vector & Raster) [Ergebnis der Requirements]
 \chapter{Analysis}
-The goal of this work is to create a layer inside the simulation system MARS LIFE that allows loading geospatial data in an high-performance way. To ensure the practical use to the model developers, use-cases were taken into account to generate requirements for the implementation.
+This work focuses on providing geospatial capabilities during simulations inside MARS LIFE. To ensure the practical use to the model developers, use-cases were taken into account to generate requirements for the implementation.
 
 
 
 \section{Use-Cases}
-\begin{usecase}
-	\addtitle{Vector I}{Open Vector file for reading}
-	\addfield{Summary:}{Open a Vector file that was imported prior to the simulation creation.}
-	\additemizedfield{Preconditions:}{
-		\item The vector file was imported and mapped prior to the simulation run.
-		\item The Shapefile is valid (containing at least a .shp, .shx and .dbf file).
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item Initiate a vector GIS layer inside the model from a file and enable agents the underlying Shapefile.
-	}
-	%	\additemizedfield{Alternative Scenario:}{
-	%		\item The user clicks the upload button, browses files of his local machine, fills the form for every file and starts the import.
-	%	}
-\end{usecase}
+The following use-cases all regard the LIFE system and therefore share the following preconditions:
+\begin{itemize}
+	\item The required input data was imported prior to the simulation.
+	\item The file has been mapped to the appropriate layer.
+	\item The data is available during the simulation.
+	\item The file is a recognized and valid GIS file.
+\end{itemize}
+
+%\begin{usecase}
+%	\addtitle{Vector I}{Open Vector file for reading}
+%	\addfield{Summary:}{Open a Vector file that was imported prior to the simulation creation.}
+%	\addfield{Preconditions:}{
+%%		\item The vector file was imported and mapped prior to the simulation run.
+%%		\item The Shapefile is valid (containing at least a .shp, .shx and .dbf file).
+%		--
+%	}
+%	\addfield{Primary Scenario:}{
+%		Initiate a vector GIS layer inside the model from a file and enable agents the underlying Shapefile.
+%	}
+%	%	\additemizedfield{Alternative Scenario:}{
+%	%		\item The user clicks the upload button, browses files of his local machine, fills the form for every file and starts the import.
+%	%	}
+%\end{usecase}
+
+%\begin{usecase}
+%	\addtitle{Vector II}{Read all features}
+%	\addfield{Summary:}{Read features from a vector file with the following types: 
+%		\begin{itemize}[itemsep=-.5em,topsep=.25em]
+%			\item Point
+%			\item Line
+%			\item Polygon
+%		\end{itemize}
+%	}
+%%	\additemizedfield{Preconditions:}{
+%%		\item The vector file was imported prior to the simulation run.
+%%		\item The vector file is open.
+%%	}
+%	\additemizedfield{Primary Scenario:}{
+%		\item A layer wants to read the positions of all agents during the initialization.
+%	}
+%\end{usecase}
 
 \begin{usecase}
-	\addtitle{Vector II}{Read all features}
-	\addfield{Summary:}{Read features from a vector file with the following types: 
-		\begin{itemize}[itemsep=-.5em,topsep=.25em]
-			\item Point
-			\item Line
-			\item Polygon
-		\end{itemize}
-	}
-	\additemizedfield{Preconditions:}{
-		\item The vector file was imported prior to the simulation run.
-		\item The vector file is open.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item A layer wants to read the positions of all agents during the initialization.
-	}
-\end{usecase}
-
-\begin{usecase}
-	\addtitle{Vector III}{Read feature at position}
+	\addtitle{Vector I}{Read feature at position}
 	\addfield{Summary:}{Read the closest feature to a GPS position.
 	}
-	\additemizedfield{Preconditions:}{
-		\item The vector file was imported prior to the simulation run.
-		\item The file is open.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item An agent wants to find a point of interest in his area (e.g. An elephant looking for the closest waterhole).
-	}
-\end{usecase}
-
-\begin{usecase}
-	\addtitle{Vector IV}{Calculate distance between features}
-	\addfield{Summary:}{A function that takes two features as input and returns the distance in meters.
-	}
-	\additemizedfield{Preconditions:}{
-		\item Both features exist and are available to the layer.
-		\item The file is open.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item An agent wants to know the distance to a specific point of interest.
+%	\additemizedfield{Preconditions:}{
+%		\item The vector file was imported prior to the simulation run.
+%		\item The file is open.
+%	}
+	\addfield{Primary Scenario:}{
+		An agent wants to find a point of interest in his area (e.g. An elephant looking for the closest waterhole).
 	}
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Vector V}{Determine if features intersect}
-	\addfield{Summary:}{A function that takes two features as input and returns true if they intersect .
+	\addtitle{Vector II}{Calculate distance between features}
+	\addfield{Summary:}{A function that takes two features as input and returns the distance.
 	}
-	\additemizedfield{Preconditions:}{
-		\item Both features exist and are available to the layer.
-		\item One Feature has to be of type polygon
-		\item The file is open.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item An agent wants to know the distance to a specific point of interest.
-	}
-\end{usecase}
-
-
-\begin{usecase}
-	\addtitle{Raster I}{Open Raster for reading}
-	\addfield{Summary:}{Open raster that was imported prior to the simulation creation.}
-	\additemizedfield{Preconditions:}{
-		\item The file was imported and mapped prior to the simulation run.
-		\item The file is valid and geo-referenced.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item Initiate a raster GIS layer inside the model from a file and enable agents to access it.
-	}
-\end{usecase}
-
-
-\begin{usecase}
-	\addtitle{Raster II}{Read all pixels}
-	\addfield{Summary:}{Read all pixels from a raster file supported by the GIS-data-service.
-	}
-	\additemizedfield{Preconditions:}{
-		\item The raster file was imported prior to the simulation run.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item A layer wants to read the positions of agents during the initialization.
+%	\additemizedfield{Preconditions:}{
+%		\item Both features exist and are available to the layer.
+%		\item The file is open.
+%	}
+	\addfield{Primary Scenario:}{
+		An agent wants to know the distance to a specific point of interest.
 	}
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Raster III}{Read pixel at position}
+	\addtitle{Vector III}{Determine if features intersect}
+	\addfield{Summary:}{A functionality that allows to detect, if several features intersect.
+	}
+%	\additemizedfield{Preconditions:}{
+%		\item Both features exist and are available to the layer.
+%		\item One Feature has to be of type polygon
+%		\item The file is open.
+%	}
+	\addfield{Primary Scenario:}{
+		An agent wants to know the distance to a specific point of interest.
+	}
+\end{usecase}
+
+%\begin{usecase}
+%	\addtitle{Raster I}{Open Raster for reading}
+%	\addfield{Summary:}{Open raster that was imported prior to the simulation creation.}
+%%	\additemizedfield{Preconditions:}{
+%%		\item The file was imported and mapped prior to the simulation run.
+%%		\item The file is valid and geo-referenced.
+%%	}
+%	\additemizedfield{Primary Scenario:}{
+%		\item Initiate a raster GIS layer inside the model from a file and enable agents to access it.
+%	}
+%\end{usecase}
+
+%\begin{usecase}
+%	\addtitle{Raster II}{Read all pixels}
+%	\addfield{Summary:}{Read all pixels from a raster file supported by the GIS-data-service.
+%	}
+%%	\additemizedfield{Preconditions:}{
+%%		\item The raster file was imported prior to the simulation run.
+%%	}
+%	\additemizedfield{Primary Scenario:}{
+%		\item A layer wants to read the positions of agents during the initialization.
+%	}
+%\end{usecase}
+
+\begin{usecase}
+	\addtitle{Raster I}{Read pixel at position}
 	\addfield{Summary:}{Read the closest non no-data pixel on a specific layer to a GPS position.
 	}
-	\additemizedfield{Preconditions:}{
-		\item The raster file was imported prior to the simulation run.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item An agent wants to find a point of interest in his area (e.g. An elephant looking for the closest waterhole).
+%	\additemizedfield{Preconditions:}{
+%		\item The raster file was imported prior to the simulation run.
+%	}
+	\addfield{Primary Scenario:}{
+		An agent wants to find a point of interest in his area (e.g. An elephant looking for the closest waterhole).
 	}
 \end{usecase}
 
 \begin{usecase}
-	\addtitle{Raster IV}{Calculate distance between Pixels}
+	\addtitle{Raster II}{Calculate distance between Pixels}
 	\addfield{Summary:}{A function that takes two GPS coordinates as input and returns the distance in Meters.
 	}
-	\additemizedfield{Preconditions:}{
-		\item Both features exist and are available to the layer.
-	}
-	\additemizedfield{Primary Scenario:}{
-		\item An agent wants to know the distance to a specific point of interest.
+%	\additemizedfield{Preconditions:}{
+%		\item Both features exist and are available to the layer.
+%	}
+	\addfield{Primary Scenario:}{
+		An agent wants to know the distance to a specific point of interest.
 	}
 \end{usecase}
 
@@ -138,12 +145,12 @@ The following requirements were extracted from the use-cases.
 
 \subsection{Functional Requirements}
 \reqstartF
-	\item Open vector file.
+%	\item Open vector file.
 	\item Read all Features from file into a local data structure.
 	\item Read all features at a GPS position.
 	\item Calculate distance between features.
 	\item Determine if features Intersect.
-	\item Open raster file.
+%	\item Open raster file.
 	\item Read all pixels from a raster into a local data structure.
 	\item Read a pixel at a specific GPS position.
 	\item Read a pixel at a cartesian position.
@@ -154,10 +161,10 @@ The following requirements were extracted from the use-cases.
 
 \subsection{Non-Functional Requirements}
 \reqstartNF
+	\item .NET Core compatibility
 	\item 1,000 agents, each reading a features in parallel takes less than 1 second (1 ms/read).
 	\item 1,000 agents, each reading a pixels in parallel takes less than 1 second (1 ms/read).
+	\item Integration into MARS LIFE
 	\item Errors are handled to prevent simulation crashes.
 	\item Log messages are written to stdout.
-	\item Integration into MARS LIFE
-	\item .NET Core compatibility
 \reqendNF
