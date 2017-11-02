@@ -114,6 +114,10 @@ DotSpatial is a GIS library for .Net Framework that allows reading and writing o
 \subsubsection{NetTopologySuite (NTS)}
 NetTopologySuite is a C\# reimplementation of the JTS Topology Suite (formerly known as "Java Topology Suite"). It is a library for geospatial vector data manipulation. Raster data handling is not supported. The Library has been migrated to support .NET Core in the fall of 2017.
 
+\subsubsection{AsciiGridParser}
+Since DotSpatial is not ported to .NET Core yet, there is no acceptable solution for reading raster GIS during the simulation. This is, why the author of this work created a parser for Esri's ASCII grid format.\\
+ASCII grid is a text-based, geo-referenced raster format that other raster formats like GeoTIFF can be converted into.
+
 
 \subsection{Others}
 The following technologies did not fit the previous categories. The GeoServer stores and manages GIS yet is not database itself and GDAL is a GIS library which is used as standalone software.
@@ -150,7 +154,7 @@ The Cloud Services are the central back-end of the MARS system. These components
 
 
 \subsection{WebUI}
-The WebUI is the front-end of MARS. It is a web-based application that allows the user to control back-end services and trigger simulations from the web-browser.
+The WebUI is the front-end of MARS. It is a web-based application that allows the user to control back-end services and trigger simulations from the web-browser. The mentioned UI is not the one explained by \cite{Karsten2017}, but an alternative implementation.
 
 
 
