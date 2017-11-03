@@ -261,18 +261,20 @@ The additional performance tests in \ref{fig:vector_performace_best} and \ref{fi
 \end{figure}
 
 
-
+% Describe workflow from GS to Layer
 \section{Final Design}
 As a result of the performance tests for compatible technologies and the requirements from section \ref{sec:requirements} the following decisions were made.
 
 
-\subsection{Vector Data}
+\subsection{Storage}
+The files are imported using the WebUI and persisted into the GeoServer. Although the GeoServer is not fast enough for real-time analysis, as for this work needed, it is sufficient for storing the GIS files. Besides persisting data, it converts the input data into the right format for the GIS layer to use. Vector files are currently converted to GeoJSON and vector files to ESRI Shapefiles.
+
+
+\subsection{GIS Layers}
+Based on the requirements and technical circumstances the integration into the LIFE simulation system will be as separate layers. One for raster and one for vector data. The layers allow to initialize the inputs prior to the simulation and access them during the actual run.
+
+\subsubsection{Vector Data}
 For the vector data manipulation, NetTopologySuite will be used. It had the best performance metrics in both tests performed. It's functionality is sufficient and the project is in active development.
 
-
-\subsection{Raster Data}
+\subsubsection{Raster Data}
 The raster data will be manipulated using the AsciiGridParser. It reads in the raster values into an multi-dimensional array. The specified mathematical functions from the requirements are implemented manually.
-
-
-\subsection{GIS Layer}
-Based on the requirements and technical circumstances the integration into the LIFE simulation system will be as separate layers. One for raster and one for vector data. The layers allow to initialize the inputs prior to the simulation and access them during the actual run.

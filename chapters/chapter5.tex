@@ -6,35 +6,34 @@
 % Performance Test (fertige Implementation)
 \chapter{Implementation}
 \label{sec:implementation}
-This chapter describes the technical problems, how they were overcome during integration into the MARS LIFE system.
+This chapter covers the GIS layers integration into the LIFE simulation system, as well as a showcase that validates the practical use.
 
 
 
-\section{Technical limitations}
-Implementing the GIS layer was done in a predefined environment. To meet the given requirements certain limitations had to be overcome.\\
-The biggest one was the usage of .NET Core in combination with the GIS domain. GIS processing is a very specialized field in computing and is used by a small community. The community has a very domain focused background, rather than a technical one. This being said, the community has settled on two main technologies; python and R.\\
-Outside these two languages the number of usable libraries is limited. C\# on the other hand has a big corporate user-base that focuses on big business applications, making it less attractive for people from the GIS domain. As a result library support for C\# is extremely limited. Currently there are only two serious libraries to choose from, namely NetTopologySuite and DotSpatial.\\
-
-
-\subsection{.NET Core}
-.NET Core is a new, implementation of C\# developed by Microsoft. While .NET Core is a very promising technology in terms of performance and platform independence, it still has some shortcomings.\\
-The most relevant issue is the absents of core functionality. Classes like \enquote{System.Drawing} which provides general image manipulation is currently missing in .NET Core v1.1. This particular class has been added to the recently published .NET Core 2.0 which improves the situation. However other functionalities used for GIS are still missing.
-
-
-\subsection{GIS libraries}
-As mentioned before, compatibility for GIS libraries is not very good. Since they rely heavily on missing core functionality, it is not trivial to migrate them and as a result, compatibility to all GIS libraries tested during the project, stopped working with .NET Core.\\
-The only library that has been migrated so far is NetTopologySuite. DotSpatial has not been ported yet and the team did not show any intentions to migrate the code base. This is why the AsciiGrid parser has been created as an alternative (see section \ref{sec:parser}).
+%\section{Technical limitations}
+%Implementing the GIS layer was done in a predefined environment. To meet the given requirements certain limitations had to be overcome.\\
+%The biggest one was the usage of .NET Core in combination with the GIS domain. GIS processing is a very specialized field in computing and is used by a small community. The community has a very domain focused background, rather than a technical one. This being said, the community has settled on two main technologies; python and R.\\
+%Outside these two languages the number of usable libraries is limited. C\# on the other hand has a big corporate user-base that focuses on big business applications, making it less attractive for people from the GIS domain. As a result library support for C\# is extremely limited. Currently there are only two serious libraries to choose from, namely NetTopologySuite and DotSpatial.\\
+%
+%
+%\subsection{.NET Core}
+%.NET Core is a new, implementation of C\# developed by Microsoft. While .NET Core is a very promising technology in terms of performance and platform independence, it still has some shortcomings.\\
+%The most relevant issue is the absents of core functionality. Classes like \enquote{System.Drawing} which provides general image manipulation is currently missing in .NET Core v1.1. This particular class has been added to the recently published .NET Core 2.0 which improves the situation. However other functionalities used for GIS are still missing.
+%
+%
+%\subsection{GIS libraries}
+%As mentioned before, compatibility for GIS libraries is not very good. Since they rely heavily on missing core functionality, it is not trivial to migrate them and as a result, compatibility to all GIS libraries tested during the project, stopped working with .NET Core.\\
+%The only library that has been migrated so far is NetTopologySuite. DotSpatial has not been ported yet and the team did not show any intentions to migrate the code base. This is why the AsciiGrid parser has been created as an alternative (see section \ref{sec:parser}).
 
 
 
 \section{Integration into MARS LIFE}
-The solutions for raster and vector GIS work quite different, as a result two separate layers have been created.
+The solutions for raster and vector GIS work quite different, as a result two separate layers have been created. During the initialization phase both layers create an instance for every GIS file of their type. The initialization data contains an URI that allows retrieving the actual file from the GeoServer. Once the file has been retrieved, it is initialized. The process differs between vector and raster data.
 
 
 \subsection{Vector GIS Layer -- NetTopologySuite}
-NTS is a reimplementation of the JavaTopologySuite written in Java. It supports various vector GIS functionalities. All requirements enlisted in section \ref{sec:requirements} are covered, as well as further functions which might be useful in the future.\\
-Since August 2017 the issue for .NET Core 1.1 compatibility has been closed, allowing NTS support for .NET Core.
-%Unfortunately the Shapefile compatibility was removed in the current version, due to some reworks. This is currently a blocker for the implementation of the GIS vector layer. If this issue persists, a self made parser for GeoJSON or well-known-text (WKT) like it was done for raster GIS is a valid alternative. In comparison to raster GIS the implementation is more complex.\\
+During the vector layers initialization, the layer opens it's file. Afterwards, the data table is converted into a concurrent dictionary. This allows for fast read and even write access during the simulation in parallel.\\
+Once initialized, the layer offers various methods for querying features in parallel. These methods include distance calculation, detecting intersections, reading and writing the data table etc. All the methods are based on the requirements specified in section \ref{sec:requirements}.
 
 
 \subsection{Raster GIS Layer -- AsciiGridParser}
@@ -49,21 +48,24 @@ The parser is fast and easy to use, since it offers a simple and clean interface
 
 \section{Showcase}
 To demonstrate the capabilities of the created GIS Vector layer, it was integrated into MARS LIFE and is used for obstacle detection within the Kruger National Park (KNP) model. The model simulates elephant population for the whole area (19,485 \si{km^{2}}) over 30 years with an hourly resolution.\\
-The park is surrounded by a fence that is supposed to keep elephants from leaving the national park. However, in times of desperate need, the elephants are able to break through the fence.\\
+The park is surrounded by a fence that is supposed to keep elephants from leaving the national park. However, in times of desperate need, the elephants are able to break through the fence.
 
 
 \subsection{Obstacle Layer Replacement}
+
 
 \subsubsection{Old Implementation}
 The old implementation uses a special obstacle layer that just has the purpose to model this kind of behavior. The original Shapefile polygon representing the fence has to be rasterized. The raster is then converted to a custom comma-separated file that represented all columns and lines of the raster image. Each field has either a value of 0 or the strength of the fence at a specific position.\\
 The obstacle approach requires extensive preparation and a specialized layer type inside LIFE. The result has the advantage that a preinitialized file is very good in terms of performance.\\
 On the other hand, it is not very accurate. The size of a cells was set to a one kilometer by one kilometer, which effectively makes the fence at least 1km thick at any point. The file size of the obstacle input file that had to be uploaded into the MARS cloud was 8.1 MB compared to 38 KB for the original Shapefile.
 
+
 \subsubsection{GIS  Implementation}
 The GIS layer is a generic implementation that allows the usage of vector files. To make the obstacle detection work, a data table with a column named "resistance" and one line, containing the value had to be added. The field holds the strength of the fence.\\
 During the elephant movement, it simply requests the accumulated path rating of the desired path. The GIS layer checks if the path intersects with a feature of the GIS file. If this is the case, it reads the resistance value of the feature's data table and adds these value up for every intersection.\\
-E.g. no intersection with a fence of strength 19,000 would return 0, one intersection 19,000, two results in 38,000 and so on.\\
+E.g. no intersection with a fence of strength 19,000 would return 0, one intersection 19,000, two results in 38,000 and so on.
 
 
 \subsection{Other possible Use-Cases}
-The generic nature of the GIS layer enables the model developer to encode any type of table data. E.g. it would be possible to use a Shapefile with polygons that contain water holes. If an elephant is within a certain distance, it could sense the water and move towards it. This mimics the functionality currently provided by the potential-field layer, that has similar constrains compared to the obstacle layer.
+The generic nature of the GIS layer enables the model developer to encode any type of table data. E.g. it would be possible to use a Shapefile with polygons that contain water holes. If an elephant is within a certain distance, it could sense the water and move towards it. This mimics the functionality currently provided by the potential-field layer, that has similar constrains compared to the obstacle layer.\\
+Another possibility is to represent vegetation. Similar to the previous showcases, this requires areas that hold certain data. Additional these values have to be able to change over time, because vegetation is consumed and grows back. Since the data table is held in RAM inside a data-structure that support parallel access it, this functionality can be used by models without adjustments to the layer.
