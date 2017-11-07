@@ -175,8 +175,7 @@ Due to the text-based nature of the format the read performance is not as good a
 
 \subsection{Performance at Scale}
 The performance at scale for the local libraries (NTS, DotSpatial and the AsciiGridParser) is different than the database solutions. The libraries open a file into RAM and read from it. The opening takes majority of the time, while reads from RAM are much faster. Since the initial opening has to be done only once, the time increase for additional reads is very low, making these solution preferable at scale.\\
-The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. The read times for local libraries is increased by a few milliseconds, while MongoDB and PostGIS take almost 10 times as much time. With agent counts in the millions, the described effect becomes even more extreme, in favor of NTS, DotSpatial and the AsciiGridParser.
-
+The additional performance tests in \ref{fig:vector_performace_best} and \ref{fig:raster_performace_best} with 10k reads verify this. The read times for local libraries is increased by a few milliseconds, while MongoDB and PostGIS take almost 10 times as much time. With the expected parallel reads of hundred thousands to millions, the described effect becomes even more severe, favoring NTS, DotSpatial and the AsciiGridParser.
 
 \begin{figure}[H]
 	\begin{tikzpicture}
