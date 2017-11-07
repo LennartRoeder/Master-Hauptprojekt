@@ -5,12 +5,12 @@
 % Datenbanken
 % MARS Architektur + Rahmenbedingungen
 \chapter{Basics}
-This chapter elaborates on the fundamental concepts and technologies necessary to understand the following chapters. They consist of a general overview of Geographic Information Systems, the mentioned geospatial libraries and databases, as well as the MARS Eco-System and it's circumstances
+This chapter elaborates on the fundamental concepts and technologies necessary to understand the following chapters. They consist of a general overview of Geographic Information Systems, the mentioned geospatial libraries and databases, as well as the MARS Eco-System and it's environment.
 
 
 
 \section{Geographic Information System (GIS)}
-GIS consists of numerous technologies to store, manipulate, analyze and visualize geographical data. It can be used in all domains that require the use of temporal and spatial data. Some usages are the visualization of land-use, elevation data, weather maps, street networks and flood maps. To leverage the capabilities that GIS offers, specialized software is required that can handle the spatial references, such as ESRI ArcMap QGIS or GrassGIS.
+GIS consists of numerous technologies to store, manipulate, analyze and visualize geographical data. It can be used in all domains that require the use of temporal and spatial data. Some usages are the visualization of land-use, elevation data, weather maps, street networks and flood maps. To leverage the capabilities that GIS offers, specialized software is required that can handle the spatial references, such as ESRI ArcMap, QGIS or GrassGIS.
 
 
 \subsection{Coordinate Reference System (CRS)}
@@ -31,7 +31,7 @@ WGS 84 is used by the Global Positioning System (GPS), GIS specialists, inside t
 
 \subsubsection{EPSG:3857 -- WGS 84 / Pseudo-Mercator}
 Pseudo-Mercator is a projected version of WGS 84 into a two-dimensional cartesian coordinate system. It is also referred to as EPSG:3857 and was created by \cite{Grafarend1995}.\\
-The CRS is based on a plane, rather than an ellipse. The zero points is identical to WGS 84 but the coordinates are X and Y measured in meters. The Y coordinate is limited to ±85.06° of the WGS 84 bounds. This results in a square projection with a range of ±20,026,376.39m on both axis, but sacrifices the poles to some extend. The square shape allow the creation of tile pyramids, also called \enquote{Mercator Pyramids} to be used for maps in browsers for the web. \\
+The CRS is based on a plane, rather than an ellipse. The zero points is identical to WGS 84 but the coordinates are X and Y measured in meters. The Y coordinate is limited to ±85.06° of the WGS 84 bounds. This results in a square projection with a range of ±20,026,376.39m on both axis, but sacrifices the poles to some extend. The square shape allow the creation of tile pyramids, also called \enquote{Mercator Pyramids} to be used for maps in browsers for the web.\\
 A pyramid consists of square images in fixed size, e.g. 256x256px. The First level has one image that shows the whole area of the data with minimal detail. On every level below the number of image tiles increases and therefore the level of detail. The number of tiles on a given level is
 $$x_n= 4* x_{n-1}$$ 
 where \enquote{x} is the number of tiles and \enquote{n} is the current level of detail. Figure \ref{img:mercator-pyramid} shows an example of a Mercator pyramid.
@@ -60,7 +60,7 @@ Common file types for raster data are GeoTIFF, ESRI, ESRI ArcGrid and ASCIIGrid.
 
 \subsubsection{Vector Data}
 In contrary to raster data, vectors files don't map color information to a specific pixel, but define mathematical shapes which are rendered as desired. This allows very efficient storage and it is possible to scale the shapes as desired.\\
-Data inside vector GIS can have several layers. Each layer has the type points, line or polygon. The data on a layer is called a feature and matches the layer type. A point feature has a single coordinate (e.g. a well in the ground). Lines are open polygon lines and are used for shapes like walls, streets or rivers. Polygons are closed lines and are used for areas, such as countries, lakes, or larger objects. Figure \ref{img:vector} shows a vector file with the mentioned 3 layers types. The point layer shows the position of wells, the line layer shows a river and the polygon layer a lake.\\
+Data inside vector GIS can have several layers. Each layer has the type points, line or polygon. The data on a layer is called a feature and matches the layer's type. A point feature has a single coordinate (e.g. a well in the ground). Lines are open polygon lines and are used for shapes like walls, streets or rivers. Polygons are closed lines and are used for areas, such as countries, lakes, or larger objects. Figure \ref{img:vector} shows a vector file with the mentioned 3 layers types. The point layer shows the position of wells, the line layer shows a river and the polygon layer a lake.\\
 While vector files have the advantage of efficient storage, they have the disadvantage of not being universally usable. The mathematical functions in which data is represented, are not well suited for data without discrete values. Anything that has gradients is better suited for raster.\\
 The most common vector file formats are ESRI Shapefile as binary and GeoJSON as a text-based format.
 
@@ -97,8 +97,9 @@ This chapter introduces the GIS technologies that were considered for usage duri
 Spatial databases are DBs that have been extended to store and query spatial data types.
 
 \subsubsection{PostGIS}
-PostGIS \citep{Obe2011} is an extender to the object-relational database PostgreSQL \citep{Momjian2001} that allows to store and query both raster and vector GIS. The interaction with the database is done through SQL.\\
-PostGIS supports numerous file types for both raster and vector data. The import process is done with specific tools that come as command-line applications which are bundled into the installation. The geometry type allows spatial queries regarding certain areas. These allow to extract single pixel values from raster files as well as feature extraction from vector files. A full list of features can be found at \url{http://postgis.net/features/}.
+PostGIS is an extender to the object-relational database PostgreSQL that allows to store and query both raster and vector GIS. The interaction with the database is done through SQL.\\
+PostGIS supports numerous file types for both raster and vector data. The import process is done with specific tools that come as command-line applications which are bundled into the installation. The geometry type allows spatial queries regarding certain areas. These allow to extract single pixel values from raster files as well as feature extraction from vector files.\\
+To read more about PostGIS and PostgreSQL see \cite{Obe2011} and \cite{Momjian2001}.
 
 \subsubsection{MongoDB}
 MongoDB is a document-based (NoSQL) database. Data is stored in binary JSON (BSON) and input, as well as output data is in JSON format.\\
@@ -106,10 +107,10 @@ As of version 3.4.9 MongoDB supports only vector GIS. It does not support a wide
 
 
 \subsection{GIS Libraries}
-The amount of proper maintained GIS libraries for C\# is very limited. DotSpatial and NetTopologySuite are among the only libraries with community support behind them.
+The amount of proper maintained GIS libraries for C\# is very limited. DotSpatial and NetTopologySuite are among the only libraries with at least community support behind them.
 
 \subsubsection{DotSpatial}
-DotSpatial is a GIS library for .Net Framework that allows reading and writing of both raster and vector data. Besides it's manipulation capabilities, it offers functionality for map visualization that allows displaying data. Unfortunately the library has not been ported to .Net Core yet.
+DotSpatial is a GIS library for .Net Framework that allows reading and writing both raster and vector data. Besides it's manipulation capabilities, it offers functionality for map visualization that allows displaying data. Unfortunately the library has not been ported to .Net Core yet.
 
 \subsubsection{NetTopologySuite (NTS)}
 NetTopologySuite is a C\# reimplementation of the JTS Topology Suite (formerly known as "Java Topology Suite"). It is a library for geospatial vector data manipulation. Raster data handling is not supported. The Library has been migrated to support .NET Core in the fall of 2017.
@@ -163,10 +164,10 @@ The LIFE simulation system is written in the C\# language. There are however dif
 
 
 \subsection{.NET Framework}
-.NET Framework is the original platform C\# is running on. It is widely used in the industry and is supported by Microsoft. Unfortunately it is Windows only, which is why the community created Mono.
+.NET Framework is the original platform C\# runs on. It is widely used in the industry and is supported by Microsoft. Unfortunately it only works in combination with Windows, which is why the community created Mono.
 
 \subsection{Mono}
-Mono is an open C\# implementation which is cross platform and therefore also available for Linux and OSX. The implementation of Mono is almost complete which makes most applications that don't require platform specific code like GUI modules on all OS. The implementation of Mono is not build for high performance use-cases like MARS.
+Mono is an open C\# implementation which is cross platform and therefore also available for Linux and OSX. The implementation of Mono is almost complete, which makes most applications that don't require platform specific code, like GUI modules, run on multiple platforms. The implementation of Mono is not build for high performance use-cases like MARS.
 
 \subsection{.NET Core}
 In 2016 Microsoft released it's own platform independent .NET version, called .NET Core. It is a complete rewrite of the .NET Framework to satisfy the shortcomings of both alternative solutions.\\
