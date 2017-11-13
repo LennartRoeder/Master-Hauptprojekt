@@ -61,7 +61,7 @@ There are two major databases with GIS support, PostGIS and MongoDB. Both offer 
 
 
 \subsection{Performance Tests}
-The previously mentioned techniques suggest that the use of local libraries offers the best performance, due to the lack of network latency. To validate this assumption all mentioned technologies were performance tested with the same input files. A small, medium and a large size vector and raster file. The sizes were 10 KB, 6.5 MB and 105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate runs. The test hardware was a Apple MacBook Pro (2016) with SSD storage, 16GB RAM and a 4x 2,7GHZ processor. The tests for DotSpatial were carried out using Mono, due to current incompatibility to .Net Core.\\
+The previously mentioned techniques suggest that the use of local libraries offers the best performance, due to the lack of network latency. To validate this assumption all mentioned technologies were performance tested with the same input files. A small, medium and a large size vector and raster file. The sizes were 10 KB, 6.5 MB and 105 MB. Each test performs 1,000 parallel reads and the result is the average of three separate runs. The test hardware was a Apple MacBook Pro (2016) with SSD storage, 16GB RAM and a 4x 2,6GHZ processor. The tests for DotSpatial were carried out using Mono, due to current incompatibility to .Net Core.\\
 The results are listed in figure \ref{fig:vector_performace} for vector and \ref{fig:raster_performace} for raster inputs. Detailed analysis of the tests can be found in the following paragraphs.
 
 \begin{figure}[H]
